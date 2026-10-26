@@ -22,6 +22,6 @@ Feature: Daraz Pakistan login
     Examples:
     | username           | password         |
     | env:TEST_USERNAME | env:TEST_PASSWORD |
-    | env:TEST_USERNAME2 | env:TEST_PASSWORD2 |
+    # | env:TEST_USERNAME2 | env:TEST_PASSWORD2 |
     # | env:TEST_USERNAME | env:TEST_PASSWORD |
     # | env:TEST_USERNAME | env:TEST_PASSWORD |

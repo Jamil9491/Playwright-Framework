@@ -28,6 +28,17 @@ export interface IConfig {
     // Reporting settings
     ALLURE_RESULTS_DIR: string;
     SCREENSHOT_ON_FAIL: boolean;
+
+    // Database settings (PostgreSQL)
+    DB_CONNECTION_STRING: string;
+    DB_HOST: string;
+    DB_PORT: number;
+    DB_NAME: string;
+    DB_USER: string;
+    DB_PASSWORD: string;
+    DB_SSL: boolean;
+    DB_POOL_MAX: number;
+    DB_QUERY_TIMEOUT: number;
 }
 
 /**
@@ -48,6 +59,15 @@ export const getConfig = (): IConfig => {
         VIEWPORT_HEIGHT: parseInt(process.env.VIEWPORT_HEIGHT || '1080', 10),
         ALLURE_RESULTS_DIR: process.env.ALLURE_RESULTS_DIR || 'allure-results',
         SCREENSHOT_ON_FAIL: process.env.SCREENSHOT_ON_FAIL === 'true' ? true : false,
+        DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || '',
+        DB_HOST: process.env.DB_HOST || 'localhost',
+        DB_PORT: parseInt(process.env.DB_PORT || '5432', 10),
+        DB_NAME: process.env.DB_NAME || '',
+        DB_USER: process.env.DB_USER || '',
+        DB_PASSWORD: process.env.DB_PASSWORD || '',
+        DB_SSL: process.env.DB_SSL === 'true',
+        DB_POOL_MAX: parseInt(process.env.DB_POOL_MAX || '5', 10),
+        DB_QUERY_TIMEOUT: parseInt(process.env.DB_QUERY_TIMEOUT || '30000', 10),
     };
 
     // Environment-specific overrides

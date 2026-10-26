@@ -12,6 +12,8 @@ import { ScreenshotManager } from "../utils/ScreenshotManager";
 import { dataService } from "../utils/dataService"; // Import the data service
 import * as path from "path";
 import { POManager } from "@/pages/POManager";
+import { GlobalVariables } from "../utils/globalVariables";
+import { dbService } from "../utils/dbService";
 // Global setup before all scenarios
 
 const EXCEL_FILE_NAME = "/test-data/test_data.xlsx";
@@ -37,6 +39,14 @@ BeforeAll(async function () {
 Before(async function (this: ICustomWorld, scenario) {
   this.logger.info(`🎬 Starting scenario: ${scenario.pickle.name}`);
 
+  // Reset shared state so values don't leak between scenarios
+  GlobalVariables.clear();
+
+  // Database-only scenarios don't need a browser
+  if (scenario.pickle.tags.some((tag) => tag.name === "@db")) {
+    return;
+  }
+
   // Initialize browser for the scenario
   await this.initBrowser();
 
@@ -46,7 +56,7 @@ Before(async function (this: ICustomWorld, scenario) {
 
 // Cleanup after each scenario
 After(async function (this: ICustomWorld, scenario) {
-  if (scenario.result?.status === Status.FAILED) {
+  if (scenario.result?.status === Status.FAILED && this.page) {
     await ScreenshotManager.capture(
       this,
       `FAILED-${scenario.pickle.name.replace(/\s+/g, "_")}`,
@@ -67,5 +77,8 @@ After(async function (this: ICustomWorld, scenario) {
 // Global cleanup after all scenarios
 AfterAll(async function () {
   Logger.info("🏆 Test execution completed");
+
+  // Close PostgreSQL connections (no-op if the database was never used)
+  await dbService.close();
   // Add any global cleanup here (e.g., API server stop)
 });
