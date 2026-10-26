@@ -41,6 +41,8 @@ ts-test-framework/
 │       └── browserManager.ts     # Browser management utility
 ├── allure-results/                # Allure test results
 ├── allure-report/                 # Generated Allure reports
+├── allure-history/                # Allure 3 run history (trends)
+├── allurerc.mjs                   # Allure 3 report configuration
 ├── cucumber.js                    # Cucumber configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── package.json                   # Project dependencies and scripts
@@ -123,8 +125,13 @@ pnpm run test:webkit
 
 ### Allure Reports
 
+The framework uses **Allure 3** (the `allure` npm package, no Java required). Report settings live in `allurerc.mjs`.
+
 ```bash
-# Generate Allure report
+# Run tests, generate the report and open it in one command
+pnpm run test:report
+
+# Generate Allure report from allure-results
 pnpm run allure:generate
 
 # Open generated report
@@ -132,7 +139,12 @@ pnpm run allure:open
 
 # Generate and serve report in one command
 pnpm run allure:serve
+
+# Live report that refreshes while tests run
+pnpm run allure:watch
 ```
+
+Run history (trends) is kept in `allure-history/history.jsonl` and appended on every generate.
 
 ## 📝 Writing Tests
 
