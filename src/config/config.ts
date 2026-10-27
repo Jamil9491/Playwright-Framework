@@ -39,7 +39,30 @@ export interface IConfig {
     DB_SSL: boolean;
     DB_POOL_MAX: number;
     DB_QUERY_TIMEOUT: number;
+
+    // Email notification settings
+    EMAIL_NOTIFICATION: boolean;
+    EMAIL_SEND_ON: 'always' | 'failure' | 'success';
+    EMAIL_DRY_RUN: boolean;
+    SMTP_HOST: string;
+    SMTP_PORT: number;
+    SMTP_SECURE: boolean;
+    SMTP_USER: string;
+    SMTP_PASSWORD: string;
+    EMAIL_FROM: string;
+    EMAIL_TO: string[];
+    EMAIL_CC: string[];
+    EMAIL_BCC: string[];
+    EMAIL_SUBJECT: string;
+    EMAIL_TEMPLATE_PATH: string;
+    EMAIL_PROJECT_NAME: string;
+    EMAIL_ATTACH_REPORT: boolean;
+    EMAIL_MAX_ATTACHMENT_MB: number;
 }
+
+/** Splits a comma/semicolon separated list of email addresses. */
+const parseList = (value?: string): string[] =>
+    (value || '').split(/[,;]/).map(item => item.trim()).filter(Boolean);
 
 /**
  * Retrieves the current environment configuration.
@@ -68,6 +91,23 @@ export const getConfig = (): IConfig => {
         DB_SSL: process.env.DB_SSL === 'true',
         DB_POOL_MAX: parseInt(process.env.DB_POOL_MAX || '5', 10),
         DB_QUERY_TIMEOUT: parseInt(process.env.DB_QUERY_TIMEOUT || '30000', 10),
+        EMAIL_NOTIFICATION: process.env.EMAIL_NOTIFICATION === 'true',
+        EMAIL_SEND_ON: (process.env.EMAIL_SEND_ON as IConfig['EMAIL_SEND_ON']) || 'always',
+        EMAIL_DRY_RUN: process.env.EMAIL_DRY_RUN === 'true',
+        SMTP_HOST: process.env.SMTP_HOST || '',
+        SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
+        SMTP_SECURE: process.env.SMTP_SECURE === 'true',
+        SMTP_USER: process.env.SMTP_USER || '',
+        SMTP_PASSWORD: process.env.SMTP_PASSWORD || '',
+        EMAIL_FROM: process.env.EMAIL_FROM || process.env.SMTP_USER || '',
+        EMAIL_TO: parseList(process.env.EMAIL_TO),
+        EMAIL_CC: parseList(process.env.EMAIL_CC),
+        EMAIL_BCC: parseList(process.env.EMAIL_BCC),
+        EMAIL_SUBJECT: process.env.EMAIL_SUBJECT || '[{{status}}] {{projectName}} - {{passed}}/{{total}} passed ({{env}})',
+        EMAIL_TEMPLATE_PATH: process.env.EMAIL_TEMPLATE_PATH || 'email-templates/report-email.html',
+        EMAIL_PROJECT_NAME: process.env.EMAIL_PROJECT_NAME || 'Playwright Automation',
+        EMAIL_ATTACH_REPORT: process.env.EMAIL_ATTACH_REPORT !== 'false',
+        EMAIL_MAX_ATTACHMENT_MB: parseFloat(process.env.EMAIL_MAX_ATTACHMENT_MB || '20'),
     };
 
     // Environment-specific overrides

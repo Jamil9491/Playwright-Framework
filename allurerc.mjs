@@ -23,7 +23,8 @@ export default defineConfig({
     awesome: {
       options: {
         reportLanguage: "en",
-        singleFile: false,
+        // Single self-contained HTML file; turned on automatically for the email attachment
+        singleFile: process.env.ALLURE_SINGLE_FILE === "true",
         groupBy: ["parentSuite", "suite", "subSuite"],
       },
     },

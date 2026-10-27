@@ -72,3 +72,6 @@ screenshots/
 
 # Office temporary lock files
 ~$*
+
+# Email dry-run previews
+email-output/

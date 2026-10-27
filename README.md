@@ -146,6 +146,39 @@ pnpm run allure:watch
 
 Run history (trends) is kept in `allure-history/history.jsonl` and appended on every generate.
 
+### Email Notifications
+
+All `test` / `test:*` scripts run through `src/scripts/runTests.ts`. After the run, when
+`EMAIL_NOTIFICATION=true`, it generates the Allure report as a single HTML file
+(`allure-report/index.html`) and emails it as an attachment. The script still exits with
+Cucumber's exit code, so CI fails when tests fail.
+
+Configure it in `.env` (see `.env-example` for all options):
+
+| Variable | Description |
+|----------|-------------|
+| `EMAIL_NOTIFICATION` | `true` to send the report after every run |
+| `EMAIL_SEND_ON` | `always`, `failure` or `success` |
+| `EMAIL_DRY_RUN` | `true` saves the email to `email-output/*.eml` instead of sending |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | SMTP server (`SMTP_SECURE=true` for port 465) |
+| `SMTP_USER` / `SMTP_PASSWORD` | SMTP login (Gmail needs an App Password) |
+| `EMAIL_FROM` | Sender, e.g. `QA Automation <qa@example.com>` |
+| `EMAIL_TO` / `EMAIL_CC` / `EMAIL_BCC` | Comma-separated recipients |
+| `EMAIL_SUBJECT` | Subject template, e.g. `[{{status}}] {{projectName}} - {{passed}}/{{total}} passed` |
+| `EMAIL_TEMPLATE_PATH` | HTML body template (default `email-templates/report-email.html`) |
+| `EMAIL_ATTACH_REPORT` | `false` to send the summary without the report |
+| `EMAIL_MAX_ATTACHMENT_MB` | Skip the attachment above this size (default 20) |
+
+Placeholders for the subject and template: `{{projectName}}` `{{status}}` `{{total}}` `{{passed}}`
+`{{failed}}` `{{broken}}` `{{skipped}}` `{{passRate}}` `{{duration}}` `{{env}}` `{{baseUrl}}`
+`{{browser}}` `{{tags}}` `{{date}}` `{{host}}`, plus `{{statusColor}}`, `{{failedTestsTable}}` and
+`{{reportNote}}` in the template.
+
+```bash
+# Email the report for the existing allure-results (ignores EMAIL_NOTIFICATION / EMAIL_SEND_ON)
+pnpm run report:email
+```
+
 ## 📝 Writing Tests
 
 ### 1. Feature Files

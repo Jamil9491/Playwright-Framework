@@ -1,0 +1,96 @@
+<!--
+  Test report email template.
+  Edit freely. Placeholders are replaced before sending:
+    {{projectName}} {{status}} {{statusColor}} {{total}} {{passed}} {{failed}} {{broken}}
+    {{skipped}} {{passRate}} {{duration}} {{env}} {{baseUrl}} {{browser}} {{tags}}
+    {{date}} {{host}} {{failedTestsTable}} {{reportNote}}
+  Keep styles inline - most email clients ignore <style> blocks.
+-->
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background:#f4f5f7;font-family:Segoe UI,Arial,sans-serif;color:#1f2933;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:24px 0;">
+      <tr>
+        <td align="center">
+          <table width="640" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+            <!-- Header -->
+            <tr>
+              <td style="background:{{statusColor}};padding:20px 28px;color:#ffffff;">
+                <div style="font-size:13px;opacity:0.9;">{{projectName}}</div>
+                <div style="font-size:22px;font-weight:600;margin-top:4px;">Test run {{status}}</div>
+                <div style="font-size:13px;opacity:0.9;margin-top:4px;">{{date}}</div>
+              </td>
+            </tr>
+
+            <!-- Greeting -->
+            <tr>
+              <td style="padding:24px 28px 8px;font-size:14px;line-height:1.5;">
+                Hi Team,<br /><br />
+                The automated test execution has completed. A summary is below and the full
+                Allure report is attached.
+              </td>
+            </tr>
+
+            <!-- Stats -->
+            <tr>
+              <td style="padding:8px 28px;">
+                <table width="100%" cellpadding="0" cellspacing="0" style="text-align:center;border-collapse:separate;border-spacing:6px;">
+                  <tr>
+                    <td style="background:#f4f5f7;border-radius:6px;padding:12px;">
+                      <div style="font-size:22px;font-weight:600;">{{total}}</div>
+                      <div style="font-size:12px;color:#616e7c;">Total</div>
+                    </td>
+                    <td style="background:#e3f9e5;border-radius:6px;padding:12px;">
+                      <div style="font-size:22px;font-weight:600;color:#1f7a3a;">{{passed}}</div>
+                      <div style="font-size:12px;color:#616e7c;">Passed</div>
+                    </td>
+                    <td style="background:#ffe3e3;border-radius:6px;padding:12px;">
+                      <div style="font-size:22px;font-weight:600;color:#b42318;">{{failed}}</div>
+                      <div style="font-size:12px;color:#616e7c;">Failed</div>
+                    </td>
+                    <td style="background:#fff3c4;border-radius:6px;padding:12px;">
+                      <div style="font-size:22px;font-weight:600;color:#8d6708;">{{broken}}</div>
+                      <div style="font-size:12px;color:#616e7c;">Broken</div>
+                    </td>
+                    <td style="background:#f4f5f7;border-radius:6px;padding:12px;">
+                      <div style="font-size:22px;font-weight:600;color:#616e7c;">{{skipped}}</div>
+                      <div style="font-size:12px;color:#616e7c;">Skipped</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Run details -->
+            <tr>
+              <td style="padding:12px 28px;">
+                <table width="100%" cellpadding="6" cellspacing="0" style="font-size:13px;border-collapse:collapse;">
+                  <tr><td style="color:#616e7c;width:140px;">Pass rate</td><td>{{passRate}}%</td></tr>
+                  <tr><td style="color:#616e7c;">Duration</td><td>{{duration}}</td></tr>
+                  <tr><td style="color:#616e7c;">Environment</td><td>{{env}}</td></tr>
+                  <tr><td style="color:#616e7c;">Base URL</td><td>{{baseUrl}}</td></tr>
+                  <tr><td style="color:#616e7c;">Browser</td><td>{{browser}}</td></tr>
+                  <tr><td style="color:#616e7c;">Tags</td><td>{{tags}}</td></tr>
+                  <tr><td style="color:#616e7c;">Executed on</td><td>{{host}}</td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Failed tests (empty when everything passed) -->
+            <tr>
+              <td style="padding:8px 28px;">{{failedTestsTable}}</td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:16px 28px 24px;font-size:12px;color:#616e7c;line-height:1.5;">
+                {{reportNote}}<br />
+                This is an automated email from the QA automation framework. Please do not reply.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
