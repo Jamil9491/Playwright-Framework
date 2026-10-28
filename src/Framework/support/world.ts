@@ -15,8 +15,9 @@ import {
 } from "@playwright/test";
 import { config } from "../config/config";
 import Logger from "../utils/logger";
+import { maximizeWindow } from "../utils/windowManager";
 import path from "path";
-import { POManager } from "../pages/POManager";
+import { POManager } from "../../pages/POManager";
 
 /**
  * Defines the shared context available in all Cucumber steps.
@@ -70,16 +71,27 @@ export class CustomWorld extends World implements ICustomWorld {
       throw new Error(`Unsupported browser type: ${this.config.BROWSER}`);
     }
 
+    // Maximizing needs a real window, so it only applies to headed runs
+    const maximize = this.config.START_MAXIMIZED && !this.config.HEADLESS;
+    if (this.config.START_MAXIMIZED && this.config.HEADLESS) {
+      this.logger.warn("START_MAXIMIZED is ignored in headless mode; using VIEWPORT_WIDTH/VIEWPORT_HEIGHT.");
+    }
+
     this.browser = await browserType.launch({
       headless: this.config.HEADLESS,
       slowMo: this.config.SLOW_MO,
+      // Only Chromium supports --start-maximized; Firefox/WebKit are maximized after launch
+      args: maximize && this.config.BROWSER === "chromium" ? ["--start-maximized"] : [],
     });
 
     this.context = await this.browser.newContext({
-      viewport: {
-        width: this.config.VIEWPORT_WIDTH,
-        height: this.config.VIEWPORT_HEIGHT,
-      },
+      // null = use the real window size instead of a fixed viewport
+      viewport: maximize
+        ? null
+        : {
+            width: this.config.VIEWPORT_WIDTH,
+            height: this.config.VIEWPORT_HEIGHT,
+          },
       baseURL: this.config.BASE_URL,
       ignoreHTTPSErrors: true,
       // Add other context options as needed (e.g., locale, timezone)
@@ -89,7 +101,17 @@ export class CustomWorld extends World implements ICustomWorld {
     this.context.setDefaultTimeout(this.config.TIMEOUT);
 
     this.page = await this.context.newPage();
-    this.logger.info("Browser and Page initialized successfully.");
+
+    // Firefox/WebKit have no start-maximized flag, so maximize the OS window directly
+    if (maximize && this.config.BROWSER !== "chromium") {
+      await maximizeWindow(this.page);
+    }
+
+    this.logger.info(
+      maximize
+        ? "Browser and Page initialized successfully (maximized)."
+        : `Browser and Page initialized successfully (${this.config.VIEWPORT_WIDTH}x${this.config.VIEWPORT_HEIGHT}).`,
+    );
   }
 
   /**

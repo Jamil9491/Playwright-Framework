@@ -1,0 +1,40 @@
+import { expect, Locator, Page } from "@playwright/test";
+import BasePage, { UIOps } from "./basePage";
+
+export class LoginPage extends BasePage {
+  private readonly usernameInput: Locator;
+  private readonly passwordInput: Locator;
+  private readonly signInButton: Locator;
+  private readonly PAGE_URL = "http://192.168.78.48:4200/auth/login";
+
+  public async isPageLoaded(): Promise<boolean> {
+    await expect(this.usernameInput).toBeVisible({ timeout: 15000 });
+    return true;
+  }
+
+  constructor(page: Page) {
+    super(page);
+    this.usernameInput = page.getByTestId("login-username");
+    this.passwordInput = page.getByTestId("login-password");
+    this.signInButton = page.getByTestId("login-submit");
+  }
+
+  public async open(): Promise<void> {
+    await this.navigateTo(this.PAGE_URL);
+    await expect(this.usernameInput).toBeVisible({ timeout: 15000 });
+  }
+
+  public async enterUsername(username: string): Promise<void> {
+    await this.executeStep(this.usernameInput, UIOps.Set, username);
+  }
+
+  public async enterPassword(password: string): Promise<void> {
+    await this.executeStep(this.passwordInput, UIOps.Set, password);
+  }
+
+  public async submit(): Promise<void> {
+    await this.executeStep(this.signInButton, UIOps.Set);
+  }
+}
+
+export default LoginPage;

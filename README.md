@@ -148,7 +148,7 @@ Run history (trends) is kept in `allure-history/history.jsonl` and appended on e
 
 ### Email Notifications
 
-All `test` / `test:*` scripts run through `src/scripts/runTests.ts`. After the run, when
+All `test` / `test:*` scripts run through `src/Framework/scripts/runTests.ts`. After the run, when
 `EMAIL_NOTIFICATION=true`, it generates the Allure report as a single HTML file
 (`allure-report/index.html`) and emails it as an attachment. The script still exits with
 Cucumber's exit code, so CI fails when tests fail.
@@ -420,7 +420,7 @@ Core library for reading and parsing Excel files (.xlsx).
 @types/xlsx
 New Dependency
 TypeScript definitions for the xlsx library.
-src/utils/dataService.ts
+src/Framework/utils/dataService.ts
 New File
 Contains the logic to load and cache data from all sheets in the Excel file.
 src/support/hooks.ts
@@ -439,7 +439,7 @@ The central Excel file containing sheets like 'Login' and 'Todo'.
 
 2. Implementation Details
 
-2.1. The Data Service (src/utils/dataService.ts)
+2.1. The Data Service (src/Framework/utils/dataService.ts)
 
 This new utility is the core of the DDT layer. It uses the xlsx library to read the entire Excel workbook and cache the data from each sheet under its respective sheet name.
 
@@ -457,7 +457,7 @@ getSingleData(sheetName, key, value): Retrieves a single data row by matching a 
 TypeScript
 
 
-// src/utils/dataService.ts (Code Snippet)
+// src/Framework/utils/dataService.ts (Code Snippet)
 import * as XLSX from 'xlsx';
 // ... other imports
 

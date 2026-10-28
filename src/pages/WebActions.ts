@@ -167,6 +167,15 @@ export class WebActions {
         await this.select(locator, data, timeout);
 
         break;
+      // -----------------------------------------------------
+      // Button
+      // -----------------------------------------------------
+
+      case "button":
+        await locator.click({
+          timeout,
+        });
+        break;
 
       // -----------------------------------------------------
       // Content Editable

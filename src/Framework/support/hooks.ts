@@ -5,7 +5,7 @@
  * Allure reporting is now handled via the new 'allure-cucumberjs/reporter' format.
  */
 
-import { Before, After, BeforeAll, AfterAll, Status } from "@cucumber/cucumber";
+import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from "@cucumber/cucumber";
 import { ICustomWorld } from "./world";
 import Logger from "../utils/logger";
 import { ScreenshotManager } from "../utils/ScreenshotManager";
@@ -14,9 +14,15 @@ import * as path from "path";
 import { POManager } from "@/pages/POManager";
 import { GlobalVariables } from "../utils/globalVariables";
 import { dbService } from "../utils/dbService";
+import { config } from "../config/config";
+// Max time per step/hook (Cucumber defaults to 5s, too short with SLOW_MO or slow pages).
+// Individual steps can still override it with { timeout: ... }.
+setDefaultTimeout(config.STEP_TIMEOUT);
+
 // Global setup before all scenarios
 
-const EXCEL_FILE_NAME = "/test-data/test_data.xlsx";
+// Excel test data location comes from TEST_DATA_PATH in .env (relative to the project root)
+const EXCEL_FILE_NAME = config.TEST_DATA_PATH;
 const EXCEL_FILE_PATH = path.join(process.cwd(), EXCEL_FILE_NAME);
 BeforeAll(async function () {
   // Load data from the multi-sheet Excel file
@@ -36,7 +42,8 @@ BeforeAll(async function () {
 });
 
 // Setup before each scenario
-Before(async function (this: ICustomWorld, scenario) {
+// Launching a browser (and maximizing Firefox/WebKit) can take longer than Cucumber's 5s default
+Before({ timeout: 60000 }, async function (this: ICustomWorld, scenario) {
   this.logger.info(`🎬 Starting scenario: ${scenario.pickle.name}`);
 
   // Reset shared state so values don't leak between scenarios

@@ -7,7 +7,8 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// quiet: the runner and the cucumber process it starts both load this file, so skip dotenv's banner
+dotenv.config({ path: path.resolve(__dirname, '../../../.env'), quiet: true });
 
 /**
  * Defines the structure for the environment configuration.
@@ -19,11 +20,16 @@ export interface IConfig {
     HEADLESS: boolean;
     SLOW_MO: number;
     TIMEOUT: number;
+    STEP_TIMEOUT: number;
 
     // Browser settings
     BROWSER: 'chromium' | 'firefox' | 'webkit';
     VIEWPORT_WIDTH: number;
     VIEWPORT_HEIGHT: number;
+    START_MAXIMIZED: boolean;
+
+    // Test data
+    TEST_DATA_PATH: string;
 
     // Reporting settings
     ALLURE_RESULTS_DIR: string;
@@ -64,6 +70,10 @@ export interface IConfig {
 const parseList = (value?: string): string[] =>
     (value || '').split(/[,;]/).map(item => item.trim()).filter(Boolean);
 
+/** Reads a true/false setting; an unset or empty value falls back to the default. */
+const parseBool = (value: string | undefined, fallback: boolean): boolean =>
+    value === undefined || value.trim() === '' ? fallback : value.trim().toLowerCase() === 'true';
+
 /**
  * Retrieves the current environment configuration.
  * @returns {IConfig} The configuration object.
@@ -74,12 +84,15 @@ export const getConfig = (): IConfig => {
     // Base configuration
     const baseConfig: Partial<IConfig> = {
         ENV: env,
-        HEADLESS: process.env.HEADLESS === 'false' ? false : false,
+        HEADLESS: parseBool(process.env.HEADLESS, false),
         SLOW_MO: parseInt(process.env.SLOW_MO || '0', 10),
         TIMEOUT: parseInt(process.env.TIMEOUT || '30000', 10),
+        STEP_TIMEOUT: parseInt(process.env.STEP_TIMEOUT || '60000', 10),
         BROWSER: (process.env.BROWSER as IConfig['BROWSER']) || 'chromium',
         VIEWPORT_WIDTH: parseInt(process.env.VIEWPORT_WIDTH || '1920', 10),
         VIEWPORT_HEIGHT: parseInt(process.env.VIEWPORT_HEIGHT || '1080', 10),
+        START_MAXIMIZED: process.env.START_MAXIMIZED === 'true',
+        TEST_DATA_PATH: process.env.TEST_DATA_PATH || 'src/test-data/test_data.xlsx',
         ALLURE_RESULTS_DIR: process.env.ALLURE_RESULTS_DIR || 'allure-results',
         SCREENSHOT_ON_FAIL: process.env.SCREENSHOT_ON_FAIL === 'true' ? true : false,
         DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || '',
@@ -116,27 +129,27 @@ export const getConfig = (): IConfig => {
             return {
                 ...baseConfig,
                 BASE_URL: process.env.PROD_BASE_URL || 'https://prod.example.com',
-                HEADLESS: true,
+                HEADLESS: parseBool(process.env.HEADLESS, true),
                 SCREENSHOT_ON_FAIL: false, // Typically disabled in production CI runs for speed
             } as IConfig;
         case 'staging':
             return {
                 ...baseConfig,
                 BASE_URL: process.env.STAGING_BASE_URL || 'https://staging.example.com',
-                HEADLESS: true,
+                HEADLESS: parseBool(process.env.HEADLESS, true),
             } as IConfig;
         case 'development':
             return {
                 ...baseConfig,
                 BASE_URL: process.env.DEV_BASE_URL || 'http://localhost:5173',
-                HEADLESS: false, // Easier for local development
+                HEADLESS: parseBool(process.env.HEADLESS, false), // Headed by default for local development
             } as IConfig;
         case 'local':
         default:
             return {
                 ...baseConfig,
                 BASE_URL: process.env.LOCAL_BASE_URL || 'http://localhost:5173',
-                HEADLESS: false,
+                HEADLESS: parseBool(process.env.HEADLESS, false),
                 SLOW_MO: parseInt(process.env.SLOW_MO || '50', 10), // Allow visual debugging speed to be configured
             } as IConfig;
     }

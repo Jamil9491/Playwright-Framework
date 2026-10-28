@@ -7,14 +7,15 @@
 import * as XLSX from 'xlsx';
 import * as path from 'path';
 import Logger from './logger';
+import { config } from '../config/config';
 
 // Define the structure for the cached data
 interface DataCache {
     [sheetName: string]: any[];
 }
 
-// Define the path to the Excel file (assuming it's in the root of the project)
-const EXCEL_FILE_PATH = path.join(process.cwd(), 'test_data.xlsx');
+// Default Excel file: TEST_DATA_PATH from .env
+const EXCEL_FILE_PATH = path.join(process.cwd(), config.TEST_DATA_PATH);
 
 class DataService {
     private cache: DataCache = {};

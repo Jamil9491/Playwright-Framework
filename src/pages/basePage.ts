@@ -5,13 +5,14 @@
  */
 
 import { Page, Locator, expect } from "@playwright/test";
-import Logger from "../utils/logger";
-import { config } from "../config/config";
+import Logger from "../Framework/utils/logger";
+import { config } from "../Framework/config/config";
 interface ElementMetadata {
   tag: string;
   type: string;
   role: string;
   contentEditable: boolean;
+  datePicker: boolean;
 }
 /**
  * Abstract base class for all page objects.
@@ -30,8 +31,7 @@ export abstract class BasePage {
     this.defaultTimeout = Number(process.env.TIMEOUT ?? 30000);
   }
 
-
-public async executeStep(
+  public async executeStep(
     locator: Locator,
     operation: UIOps,
     data = "",
@@ -69,20 +69,8 @@ public async executeStep(
         case UIOps.Verify:
           return await this.handleVerify(locator, data);
 
-        case UIOps.Click:
-          await locator.click({ timeout });
-          return "";
-
-        case UIOps.Check:
-          await locator.check({ timeout });
-          return "";
-
         case UIOps.Uncheck:
           await locator.uncheck({ timeout });
-          return "";
-
-        case UIOps.Select:
-          await this.select(locator, data, timeout);
           return "";
 
         case UIOps.Clear:
@@ -128,7 +116,10 @@ public async executeStep(
       case "input":
         switch (metadata.type) {
           case "checkbox":
-            await this.setCheckbox(locator, data, timeout);
+            // await this.setCheckbox(locator, data, timeout);
+            await locator.click({
+              timeout,
+            });
             break;
 
           case "radio":
@@ -144,6 +135,10 @@ public async executeStep(
             break;
 
           default:
+            if (metadata.datePicker) {
+              await this.setDatePicker(locator, data, timeout);
+              break;
+            }
             await locator.fill(data, { timeout });
             this.logger.info(`Setting input: ${data}`);
 
@@ -166,7 +161,7 @@ public async executeStep(
       // -----------------------------------------------------
 
       case "select":
-        await  locator.selectOption(
+        await locator.selectOption(
           {
             label: data,
           },
@@ -175,6 +170,15 @@ public async executeStep(
           },
         );
 
+        break;
+      // -----------------------------------------------------
+      // Button
+      // -----------------------------------------------------
+
+      case "button":
+        await locator.click({
+          timeout,
+        });
         break;
 
       // -----------------------------------------------------
@@ -241,8 +245,6 @@ public async executeStep(
   // CLICK
   // ============================================================
 
- 
-
   // ============================================================
   // CHECKBOX
   // ============================================================
@@ -260,7 +262,6 @@ public async executeStep(
 
     await locator.setChecked(shouldCheck, { timeout });
     this.logger.info(`Setting checkbox: ${normalized}`);
-
   }
 
   // ============================================================
@@ -280,8 +281,7 @@ public async executeStep(
         timeout,
       },
     );
-        this.logger.info(`Selecting option: ${data}`);
-
+    this.logger.info(`Selecting option: ${data}`);
   }
 
   // ============================================================
@@ -313,7 +313,28 @@ public async executeStep(
       timeout,
     });
     this.logger.info(`Selecting option: ${value}`);
+  }
 
+  // PrimeNG date pickers ignore input that isn't typed key by key (fill() fires no keydown),
+  // so the model stays empty and the text is wiped on blur. Type it, then close the overlay.
+  private async setDatePicker(
+    locator: Locator,
+    value: string,
+    timeout: number,
+  ): Promise<void> {
+    await locator.click({ timeout });
+    await locator.clear({ timeout });
+    await locator.pressSequentially(value, { timeout });
+    await locator.press("Escape", { timeout });
+    await locator.blur({ timeout });
+
+    const committed = await locator.inputValue({ timeout });
+    if (!committed) {
+      throw new Error(
+        `Date picker rejected "${value}". Check that it matches the field's date format.`,
+      );
+    }
+    this.logger.info(`Setting date: ${committed}`);
   }
 
   // ============================================================
@@ -332,6 +353,8 @@ public async executeStep(
         role: (element.getAttribute("role") ?? "").toLowerCase(),
 
         contentEditable: htmlElement.isContentEditable,
+
+        datePicker: !!element.closest("p-datepicker, p-calendar"),
       };
     });
   }
@@ -398,23 +421,6 @@ public async executeStep(
       console.error("Unable to capture failure screenshot:", screenshotError);
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
    * Navigate to a specific URL.
@@ -856,22 +862,19 @@ public async executeStep(
 
   //FUNCTION:HANDLING THE EXECUTE STEP FUNCTIONALIT
 }
- export enum UIOps {
-   Set = "SET",
-   Read = "READ",
-   Verify = "VERIFY",
-   Click = "CLICK",
-   Check = "CHECK",
-   Uncheck = "UNCHECK",
-   Select = "SELECT",
-   Clear = "CLEAR",
-   Hover = "HOVER",
- }
+export enum UIOps {
+  Set = "SET",
+  Read = "READ",
+  Verify = "VERIFY",
+  Uncheck = "UNCHECK",
+  Clear = "CLEAR",
+  Hover = "HOVER",
+}
 
- export interface WebActionOptions {
-   timeout?: number;
-   highlight?: boolean;
-   screenshotOnFailure?: boolean;
- }
+export interface WebActionOptions {
+  timeout?: number;
+  highlight?: boolean;
+  screenshotOnFailure?: boolean;
+}
 
 export default BasePage;

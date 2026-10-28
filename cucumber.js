@@ -10,12 +10,12 @@ const common = {
   // Specify the location of step definitions and support files
   require: [
     "src/steps/**/*.ts",
-    "src/support/world.ts",
-    "src/support/hooks.ts",
+    "src/Framework/support/world.ts",
+    "src/Framework/support/hooks.ts",
   ],
 
-  // Configure the Allure reporter
-  format: ["allure-cucumberjs/reporter"],
+  // Allure reporter + a console summary (failures and pass/fail counts at the end of the run)
+  format: ["allure-cucumberjs/reporter", "summary"],
 
   // Configure Allure reporter options
   formatOptions: {

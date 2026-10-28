@@ -1,22 +1,20 @@
 import { Page } from "@playwright/test";
-import {DarazHomePage} from "./darazHomePage";
-import {DarazLoginPage} from "./darazLoginPage";
+import { LoginPage } from "./loginPage";
+import { IlcSightPage } from "./ilcSightPage";
 export class POManager {
   page: Page;
-    private _darazHomePage?: DarazHomePage;
-    private _darazLoginPage?: DarazLoginPage;
+  private _loginPage?: LoginPage;
+  private _ilcSightPage?: IlcSightPage;
+
   constructor(page: Page) {
     this.page = page;
   }
-
-
-  get darazHomePage(): DarazHomePage {
-    return (this._darazHomePage ??= new DarazHomePage(this.page));
+  get LoginPage(): LoginPage {
+    return (this._loginPage ??= new LoginPage(this.page));
   }
 
-
-  get DarazLoginPage(): DarazLoginPage {
-    return (this._darazLoginPage ??= new DarazLoginPage(this.page));
+  get ilcSightPage(): IlcSightPage {
+    return (this._ilcSightPage ??= new IlcSightPage(this.page));
   }
 }
 
