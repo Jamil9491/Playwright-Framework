@@ -14,8 +14,10 @@ const common = {
     "src/Framework/support/hooks.ts",
   ],
 
-  // Allure reporter + a console summary (failures and pass/fail counts at the end of the run)
-  format: ["allure-cucumberjs/reporter", "summary"],
+  // Allure reporter + a console summary (failures and pass/fail counts at the end of the run).
+  // Only one formatter can write to the console, so Allure gets a file (it stays empty;
+  // the real results go to resultsDir). Without it, "summary" replaces Allure and no results are written.
+  format: ["allure-cucumberjs/reporter:.cucumber/allure-reporter.log", "summary"],
 
   // Configure Allure reporter options
   formatOptions: {

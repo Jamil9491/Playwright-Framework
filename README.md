@@ -165,7 +165,7 @@ Configure it in `.env` (see `.env-example` for all options):
 | `EMAIL_FROM` | Sender, e.g. `QA Automation <qa@example.com>` |
 | `EMAIL_TO` / `EMAIL_CC` / `EMAIL_BCC` | Comma-separated recipients |
 | `EMAIL_SUBJECT` | Subject template, e.g. `[{{status}}] {{projectName}} - {{passed}}/{{total}} passed` |
-| `EMAIL_TEMPLATE_PATH` | HTML body template (default `email-templates/report-email.html`) |
+| `EMAIL_TEMPLATE_PATH` | HTML body template (default `src/Framework/Report/email-templates/report-email.html`) |
 | `EMAIL_ATTACH_REPORT` | `false` to send the summary without the report |
 | `EMAIL_MAX_ATTACHMENT_MB` | Skip the attachment above this size (default 20) |
 

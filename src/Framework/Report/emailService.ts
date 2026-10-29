@@ -12,7 +12,7 @@ import os from "os";
 import path from "path";
 import nodemailer, { SendMailOptions, Transporter } from "nodemailer";
 import { config } from "../config/config";
-import Logger from "./logger";
+import Logger from "../utils/logger";
 import { RunSummary, formatDuration } from "./reportService";
 
 const DRY_RUN_DIR = path.join(process.cwd(), "email-output");

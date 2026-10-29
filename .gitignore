@@ -75,3 +75,4 @@ screenshots/
 
 # Email dry-run previews
 email-output/
+.cucumber/

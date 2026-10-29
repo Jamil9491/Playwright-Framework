@@ -1,10 +1,9 @@
 import { When, Then } from "@cucumber/cucumber";
 import { ICustomWorld } from "../../Framework/support/world";
-import { dbService, DbService } from "../../Framework/utils/dbService";
 import {
-  GlobalKey,
-  GlobalVariables,
-} from "../../Framework/utils/globalVariables";
+  posgreSQLService,
+} from "@/Framework/dataSourceAction/posgreSQLService";
+import { GlobalKey, GlobalVariables } from "../../Framework/globalVariables";
 
 interface EmployeeSkillRow {
   employee: string;
@@ -33,7 +32,7 @@ const LATEST_SALARY_QUERY = `
 When(
   "I fetch all employees with their skills from the database",
   async function (this: ICustomWorld) {
-    this.testData.employeeSkills = await dbService.getRows<EmployeeSkillRow>(
+    this.testData.employeeSkills = await posgreSQLService.getRows<EmployeeSkillRow>(
       EMPLOYEE_SKILLS_QUERY,
     );
   },
@@ -52,14 +51,14 @@ Then(
     console.table(rows);
 
     // Also attach the result to the Allure report
-    this.attach(DbService.formatRows(rows), "text/plain");
+    this.attach(posgreSQLService.formatRows(rows), "text/plain");
   },
 );
 
 When(
   "I fetch the salary of the latest employee from the database",
   async function (this: ICustomWorld) {
-    await dbService.fetchAndStore(
+    await posgreSQLService.fetchAndStore(
       GlobalKey.ILC_SIGHT_REF_NUMB,
       LATEST_SALARY_QUERY,
     );

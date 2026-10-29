@@ -6,7 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { spawnSync } from "child_process";
-import Logger from "./logger";
+import Logger from "../utils/logger";
 import { config } from "../config/config";
 
 export type TestStatus = "passed" | "failed" | "broken" | "skipped" | "unknown";

@@ -5,7 +5,7 @@
  *
  * Always pass user/test values as parameters ($1, $2, ...) rather than
  * concatenating them into the SQL string, to avoid SQL injection and quoting bugs:
- *     await dbService.getSingleValue('SELECT name FROM users WHERE id = $1', [userId]);
+ *     await posgreSQLService.getSingleValue('SELECT name FROM users WHERE id = $1', [userId]);
  *
  * Note: Postgres BIGINT / NUMERIC columns come back as strings (to avoid precision
  * loss) and unquoted column names are returned in lowercase.
@@ -13,8 +13,8 @@
 
 import { Pool, PoolClient, PoolConfig, QueryResult, QueryResultRow } from "pg";
 import { config } from "../config/config";
-import Logger from "./logger";
-import { GlobalKey, GlobalVariables } from "./globalVariables";
+import Logger from "../utils/logger";
+import { GlobalKey, GlobalVariables } from "../globalVariables";
 
 /** A single result row: column name -> value. */
 export type DbRow = QueryResultRow;
@@ -34,40 +34,40 @@ export interface PollOptions {
 const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-class DbService {
+export class PosgreSQLService {
   private pool: Pool | null = null;
   private logger = Logger;
 
   /**
    * Builds the pool configuration from config / .env.
-   * DB_CONNECTION_STRING takes precedence over the individual DB_* settings.
+   * POSTGRES_CONNECTION_STRING takes precedence over the individual POSTGRES_* settings.
    */
   private buildPoolConfig(): PoolConfig {
     const common: PoolConfig = {
-      max: config.DB_POOL_MAX,
-      query_timeout: config.DB_QUERY_TIMEOUT,
+      max: config.POSTGRES_POOL_MAX,
+      query_timeout: config.POSTGRES_QUERY_TIMEOUT,
       connectionTimeoutMillis: 10000,
       idleTimeoutMillis: 30000,
-      ssl: config.DB_SSL ? { rejectUnauthorized: false } : undefined,
+      ssl: config.POSTGRES_SSL ? { rejectUnauthorized: false } : undefined,
     };
 
-    if (config.DB_CONNECTION_STRING) {
-      return { ...common, connectionString: config.DB_CONNECTION_STRING };
+    if (config.POSTGRES_CONNECTION_STRING) {
+      return { ...common, connectionString: config.POSTGRES_CONNECTION_STRING };
     }
 
-    if (!config.DB_NAME || !config.DB_USER) {
+    if (!config.POSTGRES_NAME || !config.POSTGRES_USER) {
       throw new Error(
-        "Database is not configured. Set DB_CONNECTION_STRING or DB_HOST/DB_NAME/DB_USER/DB_PASSWORD in .env",
+        "Database is not configured. Set POSTGRES_CONNECTION_STRING or POSTGRES_HOST/POSTGRES_NAME/POSTGRES_USER/POSTGRES_PASSWORD in .env",
       );
     }
 
     return {
       ...common,
-      host: config.DB_HOST,
-      port: config.DB_PORT,
-      database: config.DB_NAME,
-      user: config.DB_USER,
-      password: config.DB_PASSWORD,
+      host: config.POSTGRES_HOST,
+      port: config.POSTGRES_PORT,
+      database: config.POSTGRES_NAME,
+      user: config.POSTGRES_USER,
+      password: config.POSTGRES_PASSWORD,
     };
   }
 
@@ -143,7 +143,7 @@ class DbService {
 
   /**
    * Executes a query and returns all rows.
-   * @example const users = await dbService.getRows<{ id: number; email: string }>('SELECT id, email FROM users');
+   * @example const users = await posgreSQLService.getRows<{ id: number; email: string }>('SELECT id, email FROM users');
    */
   public async getRows<T extends DbRow = DbRow>(
     sql: string,
@@ -170,7 +170,7 @@ class DbService {
 
   /**
    * Executes a query and returns the first column of the first row, or null if no data.
-   * @example const count = Number(await dbService.getSingleValue('SELECT COUNT(*) FROM orders WHERE user_id = $1', [id]));
+   * @example const count = Number(await posgreSQLService.getSingleValue('SELECT COUNT(*) FROM orders WHERE user_id = $1', [id]));
    */
   public async getSingleValue<T = string>(
     sql: string,
@@ -234,7 +234,7 @@ class DbService {
 
   /**
    * Executes INSERT / UPDATE / DELETE (or DDL) and returns the number of affected rows.
-   * @example await dbService.execute('UPDATE orders SET status = $1 WHERE id = $2', ['Cancelled', orderId]);
+   * @example await posgreSQLService.execute('UPDATE orders SET status = $1 WHERE id = $2', ['Cancelled', orderId]);
    */
   public async execute(sql: string, params: unknown[] = []): Promise<number> {
     const result = await this.run(sql, params);
@@ -245,7 +245,7 @@ class DbService {
    * Runs several statements in a single transaction. Commits if the callback
    * succeeds, rolls back and rethrows if it throws.
    * @example
-   * await dbService.withTransaction(async tx => {
+   * await posgreSQLService.withTransaction(async tx => {
    *     await tx.execute('DELETE FROM cart_items WHERE user_id = $1', [userId]);
    *     await tx.execute('DELETE FROM carts WHERE user_id = $1', [userId]);
    * });
@@ -293,7 +293,7 @@ class DbService {
    * or an empty array if nothing was ever returned.
    *
    * @example
-   * const rows = await dbService.pollUntil(
+   * const rows = await posgreSQLService.pollUntil(
    *     'SELECT status FROM jobs WHERE file_name LIKE $1 ORDER BY id DESC',
    *     [`%${fileName}%`],
    *     rows => rows.some(r => String(r.status).toLowerCase() === 'completed'),
@@ -347,7 +347,7 @@ class DbService {
   // ── Helpers ──────────────────────────────────────────────────────────────
 
   /** Formats rows as "column: value" lines, handy for logs or Allure attachments. */
-  public static formatRows(rows: DbRow[]): string {
+  public  formatRows(rows: DbRow[]): string {
     return rows
       .map((row) =>
         Object.entries(row)
@@ -359,5 +359,4 @@ class DbService {
 }
 
 // Export a singleton instance
-export const dbService = new DbService();
-export { DbService };
+export const posgreSQLService = new PosgreSQLService();

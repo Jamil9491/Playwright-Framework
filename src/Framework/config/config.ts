@@ -36,15 +36,15 @@ export interface IConfig {
     SCREENSHOT_ON_FAIL: boolean;
 
     // Database settings (PostgreSQL)
-    DB_CONNECTION_STRING: string;
-    DB_HOST: string;
-    DB_PORT: number;
-    DB_NAME: string;
-    DB_USER: string;
-    DB_PASSWORD: string;
-    DB_SSL: boolean;
-    DB_POOL_MAX: number;
-    DB_QUERY_TIMEOUT: number;
+    POSTGRES_CONNECTION_STRING: string;
+    POSTGRES_HOST: string;
+    POSTGRES_PORT: number;
+    POSTGRES_NAME: string;
+    POSTGRES_USER: string;
+    POSTGRES_PASSWORD: string;
+    POSTGRES_SSL: boolean;
+    POSTGRES_POOL_MAX: number;
+    POSTGRES_QUERY_TIMEOUT: number;
 
     // Email notification settings
     EMAIL_NOTIFICATION: boolean;
@@ -95,15 +95,15 @@ export const getConfig = (): IConfig => {
         TEST_DATA_PATH: process.env.TEST_DATA_PATH || 'src/tests/test-data',
         ALLURE_RESULTS_DIR: process.env.ALLURE_RESULTS_DIR || 'allure-results',
         SCREENSHOT_ON_FAIL: process.env.SCREENSHOT_ON_FAIL === 'true' ? true : false,
-        DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || '',
-        DB_HOST: process.env.DB_HOST || 'localhost',
-        DB_PORT: parseInt(process.env.DB_PORT || '5432', 10),
-        DB_NAME: process.env.DB_NAME || '',
-        DB_USER: process.env.DB_USER || '',
-        DB_PASSWORD: process.env.DB_PASSWORD || '',
-        DB_SSL: process.env.DB_SSL === 'true',
-        DB_POOL_MAX: parseInt(process.env.DB_POOL_MAX || '5', 10),
-        DB_QUERY_TIMEOUT: parseInt(process.env.DB_QUERY_TIMEOUT || '30000', 10),
+        POSTGRES_CONNECTION_STRING: process.env.POSTGRES_CONNECTION_STRING || '',
+        POSTGRES_HOST: process.env.POSTGRES_HOST || 'localhost',
+        POSTGRES_PORT: parseInt(process.env.POSTGRES_PORT || '5432', 10),
+        POSTGRES_NAME: process.env.POSTGRES_NAME || '',
+        POSTGRES_USER: process.env.POSTGRES_USER || '',
+        POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD || '',
+        POSTGRES_SSL: process.env.POSTGRES_SSL === 'true',
+        POSTGRES_POOL_MAX: parseInt(process.env.POSTGRES_POOL_MAX || '5', 10),
+        POSTGRES_QUERY_TIMEOUT: parseInt(process.env.POSTGRES_QUERY_TIMEOUT || '30000', 10),
         EMAIL_NOTIFICATION: process.env.EMAIL_NOTIFICATION === 'true',
         EMAIL_SEND_ON: (process.env.EMAIL_SEND_ON as IConfig['EMAIL_SEND_ON']) || 'always',
         EMAIL_DRY_RUN: process.env.EMAIL_DRY_RUN === 'true',
@@ -117,7 +117,7 @@ export const getConfig = (): IConfig => {
         EMAIL_CC: parseList(process.env.EMAIL_CC),
         EMAIL_BCC: parseList(process.env.EMAIL_BCC),
         EMAIL_SUBJECT: process.env.EMAIL_SUBJECT || '[{{status}}] {{projectName}} - {{passed}}/{{total}} passed ({{env}})',
-        EMAIL_TEMPLATE_PATH: process.env.EMAIL_TEMPLATE_PATH || 'email-templates/report-email.html',
+        EMAIL_TEMPLATE_PATH: process.env.EMAIL_TEMPLATE_PATH || 'src/Framework/Report/email-templates/report-email.html',
         EMAIL_PROJECT_NAME: process.env.EMAIL_PROJECT_NAME || 'Playwright Automation',
         EMAIL_ATTACH_REPORT: process.env.EMAIL_ATTACH_REPORT !== 'false',
         EMAIL_MAX_ATTACHMENT_MB: parseFloat(process.env.EMAIL_MAX_ATTACHMENT_MB || '20'),

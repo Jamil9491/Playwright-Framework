@@ -19,8 +19,8 @@ import { ScreenshotManager } from "../utils/ScreenshotManager";
 import { dataService } from "../utils/dataService"; // Import the data service
 import * as path from "path";
 import { POManager } from "@/tests/pages/POManager";
-import { GlobalVariables } from "../utils/globalVariables";
-import { dbService } from "../utils/dbService";
+import { GlobalVariables } from "../globalVariables";
+import { posgreSQLService } from "../dataSourceAction/posgreSQLService";
 import { config } from "../config/config";
 // Max time per step/hook (Cucumber defaults to 5s, too short with SLOW_MO or slow pages).
 // Individual steps can still override it with { timeout: ... }.
@@ -29,8 +29,12 @@ setDefaultTimeout(config.STEP_TIMEOUT);
 // Global setup before all scenarios
 
 // Excel test data location comes from TEST_DATA_PATH in .env (relative to the project root)
-const EXCEL_FILE_NAME = 'test_data.xlsx'; 
-const EXCEL_FILE_PATH = path.join(process.cwd(),config.TEST_DATA_PATH, EXCEL_FILE_NAME);
+const EXCEL_FILE_NAME = "test_data.xlsx";
+const EXCEL_FILE_PATH = path.join(
+  process.cwd(),
+  config.TEST_DATA_PATH,
+  EXCEL_FILE_NAME,
+);
 BeforeAll(async function () {
   // Load data from the multi-sheet Excel file
   try {
@@ -93,6 +97,6 @@ AfterAll(async function () {
   Logger.info("🏆 Test execution completed");
 
   // Close PostgreSQL connections (no-op if the database was never used)
-  await dbService.close();
+  await posgreSQLService.close();
   // Add any global cleanup here (e.g., API server stop)
 });

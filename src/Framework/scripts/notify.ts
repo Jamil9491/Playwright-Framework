@@ -6,8 +6,8 @@
 
 import { config } from "../config/config";
 import Logger from "../utils/logger";
-import { emailService } from "../utils/emailService";
-import { generateAllureReport, getRunSummary } from "../utils/reportService";
+import { emailService } from "../Report/emailService";
+import { generateAllureReport, getRunSummary } from "../Report/reportService";
 
 const REPORT_DIR = "allure-report";
 
