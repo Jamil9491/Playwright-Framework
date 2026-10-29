@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 import BasePage, { UIOps } from "./basePage";
+import * as path from "path";
 
 export class IlcSightPage extends BasePage {
   private readonly letterOfCreditButton: Locator;
@@ -18,11 +19,11 @@ export class IlcSightPage extends BasePage {
   private readonly beneficiaryCountryDropdown: Locator;
   private readonly beneficiaryAccountInput: Locator;
   private readonly advisingBankDropdown: Locator;
-  private readonly currencyDropdown: Locator;
   private readonly amountInput: Locator;
+  private readonly currencyDropdown: Locator;
   private readonly toleranceTypeDropdown: Locator;
-  private readonly percentInput: Locator;
-  private readonly fieldO8jls0gPercentInput: Locator;
+  private readonly fieldK98ekgtAmountInput: Locator;
+  private readonly field3luf0l6AmountInput: Locator;
   private readonly availableByDropdown: Locator;
   private readonly presentationPeriodDaysInput: Locator;
   private readonly presentationPeriodDescriptionInput: Locator;
@@ -34,10 +35,12 @@ export class IlcSightPage extends BasePage {
   private readonly marginAccountDropdown: Locator;
   private readonly initiatingBranchDropdown: Locator;
   private readonly processingBranchDropdown: Locator;
+  private readonly addRowButton: Locator;
+  private readonly typeDropdown: Locator;
+  private readonly attachmentsInput: Locator;
+  private readonly saveButton: Locator;
   private readonly validateButton: Locator;
-  private readonly continueButton: Locator;
   private readonly submitButton: Locator;
-
 
   public async isPageLoaded(): Promise<boolean> {
     await expect(this.letterOfCreditButton).toBeVisible({ timeout: 15000 });
@@ -48,38 +51,97 @@ export class IlcSightPage extends BasePage {
     super(page);
     this.letterOfCreditButton = page.getByTestId("nav-lc");
     this.createLink = page.getByTestId("nav-lc-create");
-    this.productTypeDropdown = page.getByTestId("lc-field-productTypeCode-control").locator("span");
+    this.productTypeDropdown = page
+      .getByTestId("lc-field-productTypeCode-control")
+      .getByRole("combobox");
     this.applicantReferenceInput = page.getByTestId("lc-field-cifId-control");
     this.fetchButton = page.getByTestId("lc-field-cifId-action");
-    this.applicationDateDropdown = page.getByTestId("lc-field-applicationDate-control").locator("input");
-    this.transferMethodDropdown = page.getByTestId("lc-field-transferMethodCode-control").locator("span");
-    this.expiryDateDropdown = page.getByTestId("lc-field-expiryDate-control").locator("input");
-    this.confirmationDropdown = page.getByTestId("lc-field-confirmationInstructions-control").locator("span");
-    this.transferableCheckbox = page.getByTestId("lc-field-transferable-control").locator("input");
-    this.revolvingCheckbox = page.getByTestId("lc-field-revolving-control").locator("input");
+    this.applicationDateDropdown = page
+      .getByTestId("lc-field-applicationDate-control")
+      .getByRole("combobox");
+    this.transferMethodDropdown = page
+      .getByTestId("lc-field-transferMethodCode-control")
+      .getByRole("combobox");
+    this.expiryDateDropdown = page
+      .getByTestId("lc-field-expiryDate-control")
+      .getByRole("combobox");
+    this.confirmationDropdown = page
+      .getByTestId("lc-field-confirmationInstructions-control")
+      .getByRole("combobox");
+    this.transferableCheckbox = page
+      .getByTestId("lc-field-transferable-control")
+      .getByRole("switch");
+    this.revolvingCheckbox = page
+      .getByTestId("lc-field-revolving-control")
+      .getByRole("switch");
     this.expiryPlaceInput = page.getByTestId("lc-field-expiryPlace-control");
-    this.beneficiaryBankDropdown = page.getByTestId("lc-field-beneficiaryBankCode-control").locator("span");
-    this.beneficiaryCountryDropdown = page.getByTestId("lc-field-beneficiaryCountry-control").locator("span");
-    this.beneficiaryAccountInput = page.getByTestId("lc-field-beneficiaryAccountNumber-control");
-    this.advisingBankDropdown = page.getByTestId("lc-field-advBankCode-control").locator("span");
-    this.currencyDropdown = page.getByTestId("lc-field-currency-control").locator("span");
+    this.beneficiaryBankDropdown = page
+      .getByTestId("lc-field-beneficiaryBankCode-control")
+      .getByRole("combobox");
+    this.beneficiaryCountryDropdown = page
+      .getByTestId("lc-field-beneficiaryCountry-control")
+      .getByRole("combobox");
+    this.beneficiaryAccountInput = page.getByTestId(
+      "lc-field-beneficiaryAccountNumber-control",
+    );
+    this.advisingBankDropdown = page
+      .getByTestId("lc-field-advBankCode-control")
+      .getByRole("combobox");
     this.amountInput = page.getByTestId("lc-field-amount-control");
-    this.toleranceTypeDropdown = page.getByTestId("lc-field-toleranceType-control").locator("span");
-    this.percentInput = page.getByTestId("lc-field-tolerancePlusPercent-control").locator("input");
-    this.fieldO8jls0gPercentInput = page.getByTestId("lc-field-toleranceMinusPercent-control").locator("input");
-    this.availableByDropdown = page.getByTestId("lc-field-availableByCode-control").locator("span");
-    this.presentationPeriodDaysInput = page.getByTestId("lc-field-periodPresentation-control").locator("input");
-    this.presentationPeriodDescriptionInput = page.getByTestId("lc-field-presentationPeriodDescription-control");
-    this.documentSendModeDropdown = page.getByTestId("lc-field-documentSendModeCode-control").locator("span");
-    this.goodsDescriptionInput = page.getByTestId("lc-field-goodsDescription-control");
-    this.marginFormDropdown = page.getByTestId("lc-field-marginForm-control").locator("span");
-    this.marginPercentInput = page.getByTestId("lc-field-margin-control").locator("input");
-    this.marginCurrencyDropdown = page.getByTestId("lc-field-marginCurrency-control").locator("span");
-    this.marginAccountDropdown = page.getByTestId("lc-field-marginAccountCode-control").locator("span");
-    this.initiatingBranchDropdown = page.getByTestId("lc-field-initiatingBranchCode-control").locator("span");
-    this.processingBranchDropdown = page.getByTestId("lc-field-processingBranchCode-control").locator("span");
+    this.currencyDropdown = page
+      .getByTestId("lc-field-currency-control")
+      .getByRole("combobox");
+    this.toleranceTypeDropdown = page
+      .getByTestId("lc-field-toleranceType-control")
+      .getByRole("combobox");
+    this.fieldK98ekgtAmountInput = page.getByTestId(
+      "lc-field-tolerancePlusAmount-control",
+    );
+    this.field3luf0l6AmountInput = page.getByTestId(
+      "lc-field-toleranceMinusAmount-control",
+    );
+    this.availableByDropdown = page
+      .getByTestId("lc-field-availableByCode-control")
+      .getByRole("combobox");
+    this.presentationPeriodDaysInput = page
+      .getByTestId("lc-field-periodPresentation-control")
+      .getByRole("spinbutton");
+    this.presentationPeriodDescriptionInput = page.getByTestId(
+      "lc-field-presentationPeriodDescription-control",
+    );
+    this.documentSendModeDropdown = page
+      .getByTestId("lc-field-documentSendModeCode-control")
+      .getByRole("combobox");
+    this.goodsDescriptionInput = page.getByTestId(
+      "lc-field-goodsDescription-control",
+    );
+    this.marginFormDropdown = page
+      .getByTestId("lc-field-marginForm-control")
+      .getByRole("combobox");
+    this.marginPercentInput = page
+      .getByTestId("lc-field-margin-control")
+      .getByRole("spinbutton");
+    this.marginCurrencyDropdown = page
+      .getByTestId("lc-field-marginCurrency-control")
+      .getByRole("combobox");
+    this.marginAccountDropdown = page
+      .getByTestId("lc-field-marginAccountCode-control")
+      .getByRole("combobox");
+    this.initiatingBranchDropdown = page
+      .getByTestId("lc-field-initiatingBranchCode-control")
+      .getByRole("combobox");
+    this.processingBranchDropdown = page
+      .getByTestId("lc-field-processingBranchCode-control")
+      .getByRole("combobox");
+    this.addRowButton = page.getByTestId("lc-field-documents-add");
+    this.typeDropdown = page
+      .getByTestId("lc-field-documents-1-DOC_TYPE-control")
+      .getByRole("combobox");
+    this.attachmentsInput = page.getByTestId(
+      "lc-field-documents-1-ATTACHMENTS-input",
+    );
+    this.saveButton = page.getByTestId("lc-field-documents-1-save");
     this.validateButton = page.getByTestId("lc-button-validate");
-    this.continueButton = page.getByTestId("lc-create-dialog-button-continue").locator("button");
     this.submitButton = page.getByTestId("lc-button-submit");
   }
 
@@ -95,8 +157,14 @@ export class IlcSightPage extends BasePage {
     await this.executeStep(this.productTypeDropdown, UIOps.Set, value);
   }
 
-  public async enterApplicantReference(applicantReference: string): Promise<void> {
-    await this.executeStep(this.applicantReferenceInput, UIOps.Set, applicantReference);
+  public async enterApplicantReference(
+    applicantReference: string,
+  ): Promise<void> {
+    await this.executeStep(
+      this.applicantReferenceInput,
+      UIOps.Set,
+      applicantReference,
+    );
   }
 
   public async clickFetch(): Promise<void> {
@@ -104,7 +172,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async enterApplicationDate(applicationDate: string): Promise<void> {
-    await this.executeStep(this.applicationDateDropdown, UIOps.Set, applicationDate);
+    await this.executeStep(
+      this.applicationDateDropdown,
+      UIOps.Set,
+      applicationDate,
+    );
   }
 
   public async selectTransferMethod(value: string): Promise<void> {
@@ -139,44 +211,62 @@ export class IlcSightPage extends BasePage {
     await this.executeStep(this.beneficiaryCountryDropdown, UIOps.Set, value);
   }
 
-  public async enterBeneficiaryAccount(beneficiaryAccount: string): Promise<void> {
-    await this.executeStep(this.beneficiaryAccountInput, UIOps.Set, beneficiaryAccount);
+  public async enterBeneficiaryAccount(
+    beneficiaryAccount: string,
+  ): Promise<void> {
+    await this.executeStep(
+      this.beneficiaryAccountInput,
+      UIOps.Set,
+      beneficiaryAccount,
+    );
   }
 
   public async selectAdvisingBank(value: string): Promise<void> {
     await this.executeStep(this.advisingBankDropdown, UIOps.Set, value);
   }
 
-  public async selectCurrency(value: string): Promise<void> {
-    await this.executeStep(this.currencyDropdown, UIOps.Set, value);
-  }
-
   public async enterAmount(amount: string): Promise<void> {
     await this.executeStep(this.amountInput, UIOps.Set, amount);
+  }
+
+  public async selectCurrency(value: string): Promise<void> {
+    await this.executeStep(this.currencyDropdown, UIOps.Set, value);
   }
 
   public async selectToleranceType(value: string): Promise<void> {
     await this.executeStep(this.toleranceTypeDropdown, UIOps.Set, value);
   }
 
-  public async enterPercent(percent: string): Promise<void> {
-    await this.executeStep(this.percentInput, UIOps.Set, percent);
+  public async enterFieldK98ekgtAmount(amount: string): Promise<void> {
+    await this.executeStep(this.fieldK98ekgtAmountInput, UIOps.Set, amount);
   }
 
-  public async enterFieldO8jls0gPercent(percent: string): Promise<void> {
-    await this.executeStep(this.fieldO8jls0gPercentInput, UIOps.Set, percent);
+  public async enterField3luf0l6Amount(amount: string): Promise<void> {
+    await this.executeStep(this.field3luf0l6AmountInput, UIOps.Set, amount);
   }
 
   public async selectAvailableBy(value: string): Promise<void> {
     await this.executeStep(this.availableByDropdown, UIOps.Set, value);
   }
 
-  public async enterPresentationPeriodDays(presentationPeriodDays: string): Promise<void> {
-    await this.executeStep(this.presentationPeriodDaysInput, UIOps.Set, presentationPeriodDays);
+  public async enterPresentationPeriodDays(
+    presentationPeriodDays: string,
+  ): Promise<void> {
+    await this.executeStep(
+      this.presentationPeriodDaysInput,
+      UIOps.Set,
+      presentationPeriodDays,
+    );
   }
 
-  public async enterPresentationPeriodDescription(presentationPeriodDescription: string): Promise<void> {
-    await this.executeStep(this.presentationPeriodDescriptionInput, UIOps.Set, presentationPeriodDescription);
+  public async enterPresentationPeriodDescription(
+    presentationPeriodDescription: string,
+  ): Promise<void> {
+    await this.executeStep(
+      this.presentationPeriodDescriptionInput,
+      UIOps.Set,
+      presentationPeriodDescription,
+    );
   }
 
   public async selectDocumentSendMode(value: string): Promise<void> {
@@ -184,7 +274,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async enterGoodsDescription(goodsDescription: string): Promise<void> {
-    await this.executeStep(this.goodsDescriptionInput, UIOps.Set, goodsDescription);
+    await this.executeStep(
+      this.goodsDescriptionInput,
+      UIOps.Set,
+      goodsDescription,
+    );
   }
 
   public async selectMarginForm(value: string): Promise<void> {
@@ -211,12 +305,24 @@ export class IlcSightPage extends BasePage {
     await this.executeStep(this.processingBranchDropdown, UIOps.Set, value);
   }
 
-  public async clickValidate(): Promise<void> {
-    await this.executeStep(this.validateButton, UIOps.Set);
+  public async clickAddRow(): Promise<void> {
+    await this.executeStep(this.addRowButton, UIOps.Set);
   }
 
-  public async clickContinue(): Promise<void> {
-    await this.executeStep(this.continueButton, UIOps.Set);
+  public async selectType(value: string): Promise<void> {
+    await this.executeStep(this.typeDropdown, UIOps.Set, value);
+  }
+
+  public async clickAttachments(fileName: string): Promise<void> {
+    await this.executeStep(this.attachmentsInput, UIOps.Set, fileName);
+  }
+
+  public async clickSave(): Promise<void> {
+    await this.executeStep(this.saveButton, UIOps.Set);
+  }
+
+  public async clickValidate(): Promise<void> {
+    await this.executeStep(this.validateButton, UIOps.Set);
   }
 
   public async submit(): Promise<void> {

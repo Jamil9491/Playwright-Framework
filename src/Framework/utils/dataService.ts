@@ -14,8 +14,8 @@ interface DataCache {
     [sheetName: string]: any[];
 }
 
-// Default Excel file: TEST_DATA_PATH from .env
-const EXCEL_FILE_PATH = path.join(process.cwd(), config.TEST_DATA_PATH);
+// Default Excel file: test_data.xlsx inside the TEST_DATA_PATH folder from .env
+const EXCEL_FILE_PATH = path.join(process.cwd(), config.TEST_DATA_PATH, 'test_data.xlsx');
 
 class DataService {
     private cache: DataCache = {};

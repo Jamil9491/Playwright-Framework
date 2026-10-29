@@ -92,7 +92,7 @@ export const getConfig = (): IConfig => {
         VIEWPORT_WIDTH: parseInt(process.env.VIEWPORT_WIDTH || '1920', 10),
         VIEWPORT_HEIGHT: parseInt(process.env.VIEWPORT_HEIGHT || '1080', 10),
         START_MAXIMIZED: process.env.START_MAXIMIZED === 'true',
-        TEST_DATA_PATH: process.env.TEST_DATA_PATH || 'src/test-data/test_data.xlsx',
+        TEST_DATA_PATH: process.env.TEST_DATA_PATH || 'src/tests/test-data',
         ALLURE_RESULTS_DIR: process.env.ALLURE_RESULTS_DIR || 'allure-results',
         SCREENSHOT_ON_FAIL: process.env.SCREENSHOT_ON_FAIL === 'true' ? true : false,
         DB_CONNECTION_STRING: process.env.DB_CONNECTION_STRING || '',

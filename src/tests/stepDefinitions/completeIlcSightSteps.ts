@@ -1,5 +1,5 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { ICustomWorld } from "../Framework/support/world";
+import { ICustomWorld } from "../../Framework/support/world";
 
 Given("I open the Login Page", async function (this: ICustomWorld) {
   await this.POManager.LoginPage.open();
@@ -81,24 +81,24 @@ When("I select {string} from advising bank on Ilc Sight Page", async function (t
   await this.POManager.ilcSightPage.selectAdvisingBank(advisingBank);
 });
 
-When("I select {string} from currency on Ilc Sight Page", async function (this: ICustomWorld, currency: string) {
-  await this.POManager.ilcSightPage.selectCurrency(currency);
-});
-
 When("I enter {string} in amount on Ilc Sight Page", async function (this: ICustomWorld, amount: string) {
   await this.POManager.ilcSightPage.enterAmount(amount);
+});
+
+When("I select {string} from currency on Ilc Sight Page", async function (this: ICustomWorld, currency: string) {
+  await this.POManager.ilcSightPage.selectCurrency(currency);
 });
 
 When("I select {string} from tolerance type on Ilc Sight Page", async function (this: ICustomWorld, toleranceType: string) {
   await this.POManager.ilcSightPage.selectToleranceType(toleranceType);
 });
 
-When("I enter {string} in percent on Ilc Sight Page", async function (this: ICustomWorld, percent: string) {
-  await this.POManager.ilcSightPage.enterPercent(percent);
+When("I enter {string} in amount on Ilc Sight Page \\(interaction 2\\)", async function (this: ICustomWorld, amount: string) {
+  await this.POManager.ilcSightPage.enterFieldK98ekgtAmount(amount);
 });
 
-When("I enter {string} in percent on Ilc Sight Page \\(interaction 2\\)", async function (this: ICustomWorld, percent: string) {
-  await this.POManager.ilcSightPage.enterFieldO8jls0gPercent(percent);
+When("I enter {string} in amount on Ilc Sight Page \\(interaction 3\\)", async function (this: ICustomWorld, amount: string) {
+  await this.POManager.ilcSightPage.enterField3luf0l6Amount(amount);
 });
 
 When("I select {string} from available by on Ilc Sight Page", async function (this: ICustomWorld, availableBy: string) {
@@ -145,12 +145,24 @@ When("I select {string} from processing branch on Ilc Sight Page", async functio
   await this.POManager.ilcSightPage.selectProcessingBranch(processingBranch);
 });
 
-When("I click on validate button on Ilc Sight Page", async function (this: ICustomWorld) {
-  await this.POManager.ilcSightPage.clickValidate();
+When("I click on add row button on Ilc Sight Page", async function (this: ICustomWorld) {
+  await this.POManager.ilcSightPage.clickAddRow();
 });
 
-When("I click on continue button on Ilc Sight Page", async function (this: ICustomWorld) {
-  await this.POManager.ilcSightPage.clickContinue();
+When("I select {string} from type on Ilc Sight Page", async function (this: ICustomWorld, type: string) {
+  await this.POManager.ilcSightPage.selectType(type);
+});
+
+When("I upload files {string} on attachments input on Ilc Sight Page", async function (this: ICustomWorld, fileName: string) {
+  await this.POManager.ilcSightPage.clickAttachments(fileName);
+});
+
+When("I click on save button on Ilc Sight Page", async function (this: ICustomWorld) {
+  await this.POManager.ilcSightPage.clickSave();
+});
+
+When("I click on validate button on Ilc Sight Page", async function (this: ICustomWorld) {
+  await this.POManager.ilcSightPage.clickValidate();
 });
 
 When("I click on submit button on Ilc Sight Page", async function (this: ICustomWorld) {

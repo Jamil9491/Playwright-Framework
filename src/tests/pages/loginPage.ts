@@ -5,7 +5,6 @@ export class LoginPage extends BasePage {
   private readonly usernameInput: Locator;
   private readonly passwordInput: Locator;
   private readonly signInButton: Locator;
-  private readonly PAGE_URL = "http://192.168.78.48:4200/auth/login";
 
   public async isPageLoaded(): Promise<boolean> {
     await expect(this.usernameInput).toBeVisible({ timeout: 15000 });
@@ -20,7 +19,7 @@ export class LoginPage extends BasePage {
   }
 
   public async open(): Promise<void> {
-    await this.navigateTo(this.PAGE_URL);
+    await this.navigateTo(this.config.BASE_URL);
     await expect(this.usernameInput).toBeVisible({ timeout: 15000 });
   }
 

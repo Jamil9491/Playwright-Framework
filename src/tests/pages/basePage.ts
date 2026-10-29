@@ -5,14 +5,17 @@
  */
 
 import { Page, Locator, expect } from "@playwright/test";
-import Logger from "../Framework/utils/logger";
-import { config } from "../Framework/config/config";
+import Logger from "../../Framework/utils/logger";
+import { config } from "../../Framework/config/config";
+import fs from "fs";
+import path from "path";
 interface ElementMetadata {
   tag: string;
   type: string;
   role: string;
   contentEditable: boolean;
   datePicker: boolean;
+  fileUpload: boolean;
 }
 /**
  * Abstract base class for all page objects.
@@ -107,6 +110,12 @@ export abstract class BasePage {
     timeout: number,
   ): Promise<string> {
     const metadata = await this.getElementMetadata(locator);
+
+    // A file input, or an upload zone wrapping one: data is the file name in the test-data folder
+    if (metadata.fileUpload) {
+      await this.uploadFile(locator, metadata.type === "file", data, timeout);
+      return "";
+    }
 
     switch (metadata.tag) {
       // -----------------------------------------------------
@@ -245,44 +254,9 @@ export abstract class BasePage {
   // CLICK
   // ============================================================
 
-  // ============================================================
-  // CHECKBOX
-  // ============================================================
 
-  private async setCheckbox(
-    locator: Locator,
-    data: string,
-    timeout: number,
-  ): Promise<void> {
-    const normalized = data.trim().toLowerCase();
 
-    const shouldCheck = ["check", "checked", "true", "yes", "1"].includes(
-      normalized,
-    );
 
-    await locator.setChecked(shouldCheck, { timeout });
-    this.logger.info(`Setting checkbox: ${normalized}`);
-  }
-
-  // ============================================================
-  // SELECT
-  // ============================================================
-
-  private async select(
-    locator: Locator,
-    data: string,
-    timeout: number,
-  ): Promise<void> {
-    await locator.selectOption(
-      {
-        label: data,
-      },
-      {
-        timeout,
-      },
-    );
-    this.logger.info(`Selecting option: ${data}`);
-  }
 
   // ============================================================
   // CUSTOM DROPDOWN
@@ -337,6 +311,29 @@ export abstract class BasePage {
     this.logger.info(`Setting date: ${committed}`);
   }
 
+  // Sets the file directly on the (often hidden) <input type="file">, so no OS file dialog opens.
+  // The file is looked up in the test-data folder (TEST_DATA_PATH) unless an absolute path is given.
+  private async uploadFile(
+    locator: Locator,
+    isFileInput: boolean,
+    fileName: string,
+    timeout: number,
+  ): Promise<void> {
+    if (!fileName) {
+      throw new Error("Upload failed: no file name was provided.");
+    }
+
+    const testDataDir = path.resolve(process.cwd(), this.config.TEST_DATA_PATH);
+    const filePath = path.isAbsolute(fileName) ? fileName : path.join(testDataDir, fileName);
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Upload failed: file not found at ${filePath}`);
+    }
+
+    const fileInput = isFileInput ? locator : locator.locator('input[type="file"]').first();
+    await fileInput.setInputFiles(filePath, { timeout });
+    this.logger.info(`Uploading file: ${filePath}`);
+  }
+
   // ============================================================
   // ELEMENT METADATA
   // ============================================================
@@ -355,6 +352,10 @@ export abstract class BasePage {
         contentEditable: htmlElement.isContentEditable,
 
         datePicker: !!element.closest("p-datepicker, p-calendar"),
+
+        fileUpload:
+          element.matches('input[type="file"]') ||
+          !!element.querySelector('input[type="file"]'),
       };
     });
   }

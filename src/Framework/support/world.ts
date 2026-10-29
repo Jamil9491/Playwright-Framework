@@ -17,7 +17,7 @@ import { config } from "../config/config";
 import Logger from "../utils/logger";
 import { maximizeWindow } from "../utils/windowManager";
 import path from "path";
-import { POManager } from "../../pages/POManager";
+import { POManager } from "../../tests/pages/POManager";
 
 /**
  * Defines the shared context available in all Cucumber steps.
@@ -74,14 +74,19 @@ export class CustomWorld extends World implements ICustomWorld {
     // Maximizing needs a real window, so it only applies to headed runs
     const maximize = this.config.START_MAXIMIZED && !this.config.HEADLESS;
     if (this.config.START_MAXIMIZED && this.config.HEADLESS) {
-      this.logger.warn("START_MAXIMIZED is ignored in headless mode; using VIEWPORT_WIDTH/VIEWPORT_HEIGHT.");
+      this.logger.warn(
+        "START_MAXIMIZED is ignored in headless mode; using VIEWPORT_WIDTH/VIEWPORT_HEIGHT.",
+      );
     }
 
     this.browser = await browserType.launch({
       headless: this.config.HEADLESS,
       slowMo: this.config.SLOW_MO,
       // Only Chromium supports --start-maximized; Firefox/WebKit are maximized after launch
-      args: maximize && this.config.BROWSER === "chromium" ? ["--start-maximized"] : [],
+      args:
+        maximize && this.config.BROWSER === "chromium"
+          ? ["--start-maximized"]
+          : [],
     });
 
     this.context = await this.browser.newContext({

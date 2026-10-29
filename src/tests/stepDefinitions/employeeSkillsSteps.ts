@@ -1,7 +1,10 @@
 import { When, Then } from "@cucumber/cucumber";
-import { ICustomWorld } from "../Framework/support/world";
-import { dbService, DbService } from "../Framework/utils/dbService";
-import { GlobalKey, GlobalVariables } from "../Framework/utils/globalVariables";
+import { ICustomWorld } from "../../Framework/support/world";
+import { dbService, DbService } from "../../Framework/utils/dbService";
+import {
+  GlobalKey,
+  GlobalVariables,
+} from "../../Framework/utils/globalVariables";
 
 interface EmployeeSkillRow {
   employee: string;

@@ -5,11 +5,11 @@
 
 const common = {
   // Specify the location of feature files
-  paths: ["src/features/**/*.feature"],
+  paths: ["src/tests/features/**/*.feature"],
 
   // Specify the location of step definitions and support files
   require: [
-    "src/steps/**/*.ts",
+    "src/tests/stepDefinitions/**/*.ts",
     "src/Framework/support/world.ts",
     "src/Framework/support/hooks.ts",
   ],
@@ -88,5 +88,5 @@ const common = {
 };
 
 module.exports = {
-    default: common
+  default: common,
 };

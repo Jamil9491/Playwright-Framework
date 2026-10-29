@@ -23,11 +23,11 @@ Feature: Complete ilcSight
     And I select "<beneficiaryCountry>" from beneficiary country on Ilc Sight Page
     And I enter "<beneficiaryAccount>" in beneficiary account on Ilc Sight Page
     And I select "<advisingBank>" from advising bank on Ilc Sight Page
-    And I select "<currency>" from currency on Ilc Sight Page
     And I enter "<amount>" in amount on Ilc Sight Page
+    And I select "<currency>" from currency on Ilc Sight Page
     And I select "<toleranceType>" from tolerance type on Ilc Sight Page
-    And I enter "<percent>" in percent on Ilc Sight Page
-    And I enter "<percent>" in percent on Ilc Sight Page (interaction 2)
+    And I enter "<amount24>" in amount on Ilc Sight Page (interaction 2)
+    And I enter "<amount25>" in amount on Ilc Sight Page (interaction 3)
     And I select "<availableBy>" from available by on Ilc Sight Page
     And I enter "<presentationPeriodDays>" in presentation period days on Ilc Sight Page
     And I enter "<presentationPeriodDescription>" in presentation period description on Ilc Sight Page
@@ -39,10 +39,13 @@ Feature: Complete ilcSight
     And I select "<marginAccount>" from margin account on Ilc Sight Page
     And I select "<initiatingBranch>" from initiating branch on Ilc Sight Page
     And I select "<processingBranch>" from processing branch on Ilc Sight Page
+    And I click on add row button on Ilc Sight Page
+    And I select "<type>" from type on Ilc Sight Page
+    And I upload files "<fileName>" on attachments input on Ilc Sight Page
+    And I click on save button on Ilc Sight Page
     And I click on validate button on Ilc Sight Page
-    And I click on continue button on Ilc Sight Page
     And I click on submit button on Ilc Sight Page
 
     Examples:
-      | username | password | productType | applicantReference | applicationDate | transferMethod | expiryDate | confirmation | expiryPlace | beneficiaryBank | beneficiaryCountry | beneficiaryAccount | advisingBank | currency | amount | toleranceType | percent | availableBy | presentationPeriodDays | presentationPeriodDescription | documentSendMode | goodsDescription | marginForm | marginPercent | marginCurrency | marginAccount | initiatingBranch | processingBranch |
-      | log | log | ILC Sight | cif-0000-0000 | 10/23/2026 | Mail / Courier | 10/31/2026 | May Add | this is expiry place | CIF000003 - National Bank Corporation | AMERICAN SAMOA | 213423452345 | CIF000004 - Global International Bank | Pakistani rupee | 1000 | Percentage | 5 | Mixed Payment | 6 | this is presentation period description | First Class Mail | this is goods description | Percentage | 6 | Pakistani rupee | AC-00000-00001 (CURRENT_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur |
+      | username | password | productType | applicantReference | applicationDate | transferMethod | expiryDate | confirmation | expiryPlace | beneficiaryBank | beneficiaryCountry | beneficiaryAccount | advisingBank | amount | currency | toleranceType | amount24 | amount25 | availableBy | presentationPeriodDays | presentationPeriodDescription | documentSendMode | goodsDescription | marginForm | marginPercent | marginCurrency | marginAccount | initiatingBranch | processingBranch | type | fileName |
+      | log | log | ILC Sight | cif-0000-0000 | 10/15/2026 | Gateway | 10/30/2026 | May Add | expiry place | CIF000002 - XYZ Bank Limited | ALBANIA | 34523452345 | CIF000003 - National Bank Corporation | 1000 | Pakistani rupee | Amount | 166 | 166 | Deferred Payment | 8 | presentation description | Electronically | goods description | Percentage | 22 | Pakistani rupee | AC-00000-00002 (SAVING_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur | DT-000006 - G | image.png |
