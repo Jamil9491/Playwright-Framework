@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import BasePage, { UIOps } from "./basePage";
-import * as path from "path";
+import { BasePage } from "./basePage";
+import { UIOps } from "@/Framework/controls/appWrapper";
 
 export class IlcSightPage extends BasePage {
   private readonly letterOfCreditButton: Locator;
@@ -146,21 +146,21 @@ export class IlcSightPage extends BasePage {
   }
 
   public async clickLetterOfCredit(): Promise<void> {
-    await this.executeStep(this.letterOfCreditButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.letterOfCreditButton, UIOps.Set);
   }
 
   public async openCreate(): Promise<void> {
-    await this.executeStep(this.createLink, UIOps.Set);
+    await this.appWrapper.executeStep(this.createLink, UIOps.Set);
   }
 
   public async selectProductType(value: string): Promise<void> {
-    await this.executeStep(this.productTypeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.productTypeDropdown, UIOps.Set, value);
   }
 
   public async enterApplicantReference(
     applicantReference: string,
   ): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.applicantReferenceInput,
       UIOps.Set,
       applicantReference,
@@ -168,11 +168,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async clickFetch(): Promise<void> {
-    await this.executeStep(this.fetchButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.fetchButton, UIOps.Set);
   }
 
   public async enterApplicationDate(applicationDate: string): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.applicationDateDropdown,
       UIOps.Set,
       applicationDate,
@@ -180,41 +180,41 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectTransferMethod(value: string): Promise<void> {
-    await this.executeStep(this.transferMethodDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.transferMethodDropdown, UIOps.Set, value);
   }
 
   public async enterExpiryDate(expiryDate: string): Promise<void> {
-    await this.executeStep(this.expiryDateDropdown, UIOps.Set, expiryDate);
+    await this.appWrapper.executeStep(this.expiryDateDropdown, UIOps.Set, expiryDate);
   }
 
   public async selectConfirmation(value: string): Promise<void> {
-    await this.executeStep(this.confirmationDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.confirmationDropdown, UIOps.Set, value);
   }
 
   public async checkTransferable(): Promise<void> {
-    await this.executeStep(this.transferableCheckbox, UIOps.Set);
+    await this.appWrapper.executeStep(this.transferableCheckbox, UIOps.Set);
   }
 
   public async checkRevolving(): Promise<void> {
-    await this.executeStep(this.revolvingCheckbox, UIOps.Set);
+    await this.appWrapper.executeStep(this.revolvingCheckbox, UIOps.Set);
   }
 
   public async enterExpiryPlace(expiryPlace: string): Promise<void> {
-    await this.executeStep(this.expiryPlaceInput, UIOps.Set, expiryPlace);
+    await this.appWrapper.executeStep(this.expiryPlaceInput, UIOps.Set, expiryPlace);
   }
 
   public async selectBeneficiaryBank(value: string): Promise<void> {
-    await this.executeStep(this.beneficiaryBankDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.beneficiaryBankDropdown, UIOps.Set, value);
   }
 
   public async selectBeneficiaryCountry(value: string): Promise<void> {
-    await this.executeStep(this.beneficiaryCountryDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.beneficiaryCountryDropdown, UIOps.Set, value);
   }
 
   public async enterBeneficiaryAccount(
     beneficiaryAccount: string,
   ): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.beneficiaryAccountInput,
       UIOps.Set,
       beneficiaryAccount,
@@ -222,37 +222,37 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectAdvisingBank(value: string): Promise<void> {
-    await this.executeStep(this.advisingBankDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.advisingBankDropdown, UIOps.Set, value);
   }
 
   public async enterAmount(amount: string): Promise<void> {
-    await this.executeStep(this.amountInput, UIOps.Set, amount);
+    await this.appWrapper.executeStep(this.amountInput, UIOps.Set, amount);
   }
 
   public async selectCurrency(value: string): Promise<void> {
-    await this.executeStep(this.currencyDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.currencyDropdown, UIOps.Set, value);
   }
 
   public async selectToleranceType(value: string): Promise<void> {
-    await this.executeStep(this.toleranceTypeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.toleranceTypeDropdown, UIOps.Set, value);
   }
 
   public async enterFieldK98ekgtAmount(amount: string): Promise<void> {
-    await this.executeStep(this.fieldK98ekgtAmountInput, UIOps.Set, amount);
+    await this.appWrapper.executeStep(this.fieldK98ekgtAmountInput, UIOps.Set, amount);
   }
 
   public async enterField3luf0l6Amount(amount: string): Promise<void> {
-    await this.executeStep(this.field3luf0l6AmountInput, UIOps.Set, amount);
+    await this.appWrapper.executeStep(this.field3luf0l6AmountInput, UIOps.Set, amount);
   }
 
   public async selectAvailableBy(value: string): Promise<void> {
-    await this.executeStep(this.availableByDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.availableByDropdown, UIOps.Set, value);
   }
 
   public async enterPresentationPeriodDays(
     presentationPeriodDays: string,
   ): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.presentationPeriodDaysInput,
       UIOps.Set,
       presentationPeriodDays,
@@ -262,7 +262,7 @@ export class IlcSightPage extends BasePage {
   public async enterPresentationPeriodDescription(
     presentationPeriodDescription: string,
   ): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.presentationPeriodDescriptionInput,
       UIOps.Set,
       presentationPeriodDescription,
@@ -270,11 +270,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectDocumentSendMode(value: string): Promise<void> {
-    await this.executeStep(this.documentSendModeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.documentSendModeDropdown, UIOps.Set, value);
   }
 
   public async enterGoodsDescription(goodsDescription: string): Promise<void> {
-    await this.executeStep(
+    await this.appWrapper.executeStep(
       this.goodsDescriptionInput,
       UIOps.Set,
       goodsDescription,
@@ -282,51 +282,51 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectMarginForm(value: string): Promise<void> {
-    await this.executeStep(this.marginFormDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.marginFormDropdown, UIOps.Set, value);
   }
 
   public async enterMarginPercent(marginPercent: string): Promise<void> {
-    await this.executeStep(this.marginPercentInput, UIOps.Set, marginPercent);
+    await this.appWrapper.executeStep(this.marginPercentInput, UIOps.Set, marginPercent);
   }
 
   public async selectMarginCurrency(value: string): Promise<void> {
-    await this.executeStep(this.marginCurrencyDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.marginCurrencyDropdown, UIOps.Set, value);
   }
 
   public async selectMarginAccount(value: string): Promise<void> {
-    await this.executeStep(this.marginAccountDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.marginAccountDropdown, UIOps.Set, value);
   }
 
   public async selectInitiatingBranch(value: string): Promise<void> {
-    await this.executeStep(this.initiatingBranchDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.initiatingBranchDropdown, UIOps.Set, value);
   }
 
   public async selectProcessingBranch(value: string): Promise<void> {
-    await this.executeStep(this.processingBranchDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.processingBranchDropdown, UIOps.Set, value);
   }
 
   public async clickAddRow(): Promise<void> {
-    await this.executeStep(this.addRowButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.addRowButton, UIOps.Set);
   }
 
   public async selectType(value: string): Promise<void> {
-    await this.executeStep(this.typeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(this.typeDropdown, UIOps.Set, value);
   }
 
   public async clickAttachments(fileName: string): Promise<void> {
-    await this.executeStep(this.attachmentsInput, UIOps.Set, fileName);
+    await this.appWrapper.executeStep(this.attachmentsInput, UIOps.Set, fileName);
   }
 
   public async clickSave(): Promise<void> {
-    await this.executeStep(this.saveButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.saveButton, UIOps.Set);
   }
 
   public async clickValidate(): Promise<void> {
-    await this.executeStep(this.validateButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.validateButton, UIOps.Set);
   }
 
   public async submit(): Promise<void> {
-    await this.executeStep(this.submitButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.submitButton, UIOps.Set);
   }
 }
 

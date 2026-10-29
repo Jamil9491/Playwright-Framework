@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import BasePage, { UIOps } from "./basePage";
-
+import {BasePage} from "./basePage";
+import {UIOps} from "@/Framework/controls/appWrapper";
 export class LoginPage extends BasePage {
   private readonly usernameInput: Locator;
   private readonly passwordInput: Locator;
@@ -19,20 +19,21 @@ export class LoginPage extends BasePage {
   }
 
   public async open(): Promise<void> {
-    await this.navigateTo(this.config.BASE_URL);
+    await this.appWrapper.navigateTo(this.config.BASE_URL);
     await expect(this.usernameInput).toBeVisible({ timeout: 15000 });
   }
 
   public async enterUsername(username: string): Promise<void> {
-    await this.executeStep(this.usernameInput, UIOps.Set, username);
+    // await this.executeStep(this.usernameInput, UIOps.Set, username);
+    await this.appWrapper.executeStep(this.usernameInput, UIOps.Set, username);
   }
 
   public async enterPassword(password: string): Promise<void> {
-    await this.executeStep(this.passwordInput, UIOps.Set, password);
+    await this.appWrapper.executeStep(this.passwordInput, UIOps.Set, password);
   }
 
   public async submit(): Promise<void> {
-    await this.executeStep(this.signInButton, UIOps.Set);
+    await this.appWrapper.executeStep(this.signInButton, UIOps.Set);
   }
 }
 
