@@ -51,7 +51,6 @@ export class CustomWorld extends World implements ICustomWorld {
 
   constructor(options: any) {
     super(options);
-    this.logger.logConfig();
     this.POManager = new POManager(this.page);
   }
 

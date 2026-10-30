@@ -29,6 +29,8 @@ setDefaultTimeout(config.STEP_TIMEOUT);
 // Global setup before all scenarios
 BeforeAll(async function () {
   Logger.info("🚀 Starting test execution...");
+  // Once per run (each --parallel worker logs it once); the World is rebuilt for every scenario
+  Logger.logConfig();
   // Add any global setup here (e.g., API server start)
   Logger.info("✅ Test environment initialized");
 });
