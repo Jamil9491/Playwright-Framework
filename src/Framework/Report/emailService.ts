@@ -105,6 +105,8 @@ class EmailService {
       baseUrl: config.BASE_URL,
       browser: config.BROWSER,
       tags: process.env.CUCUMBER_TAGS || "All",
+      // Set by runSuite.ts: "<workbook> › <sheet>"
+      suite: process.env.TEST_SUITE || "-",
       date: new Date().toLocaleString(),
       host: os.hostname(),
     };

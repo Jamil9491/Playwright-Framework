@@ -2,7 +2,7 @@
   Test report email template.
   Edit freely. Placeholders are replaced before sending:
     {{projectName}} {{status}} {{statusColor}} {{total}} {{passed}} {{failed}} {{broken}}
-    {{skipped}} {{passRate}} {{duration}} {{env}} {{baseUrl}} {{browser}} {{tags}}
+    {{skipped}} {{passRate}} {{duration}} {{env}} {{baseUrl}} {{browser}} {{tags}} {{suite}}
     {{date}} {{host}} {{failedTestsTable}} {{reportNote}}
   Keep styles inline - most email clients ignore <style> blocks.
 -->
@@ -70,6 +70,7 @@
                   <tr><td style="color:#616e7c;">Base URL</td><td>{{baseUrl}}</td></tr>
                   <tr><td style="color:#616e7c;">Browser</td><td>{{browser}}</td></tr>
                   <tr><td style="color:#616e7c;">Tags</td><td>{{tags}}</td></tr>
+                  <tr><td style="color:#616e7c;">Test suite</td><td>{{suite}}</td></tr>
                   <tr><td style="color:#616e7c;">Executed on</td><td>{{host}}</td></tr>
                 </table>
               </td>

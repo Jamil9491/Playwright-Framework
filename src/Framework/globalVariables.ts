@@ -107,6 +107,15 @@ export class GlobalVariables {
   public static LoginSheet = "";
   public static LoginIteration = "";
 
+  // ── Excel suite run ──────────────────────────────────────────────────────
+  // Set by the hooks for each scenario started from the test-suite workbook (runSuite.ts).
+  // Iteration is the data variation of the current row (e.g. "DV_3"); tables are already
+  // trimmed to it, so steps only need it for their own lookups.
+
+  public static Seq_Id = "";
+  public static WorkFlow_Desc = "";
+  public static Iteration = "";
+
   public static get HAS_LOGIN_RECORD(): boolean {
     return !!GlobalVariables.LoginScriptId && !!GlobalVariables.LoginWorkbook;
   }

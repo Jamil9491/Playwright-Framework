@@ -31,6 +31,12 @@ export interface IConfig {
     // Test data
     TEST_DATA_PATH: string;
 
+    // Excel-driven test suite (runSuite.ts)
+    SUITE_WORKBOOK: string;
+    SUITE_SHEET: string;
+    SUITE_FEATURES_DIR: string;
+    SUITE_STOP_WORKFLOW_ON_FAILURE: boolean;
+
     // Reporting settings
     ALLURE_RESULTS_DIR: string;
     SCREENSHOT_ON_FAIL: boolean;
@@ -93,6 +99,10 @@ export const getConfig = (): IConfig => {
         VIEWPORT_HEIGHT: parseInt(process.env.VIEWPORT_HEIGHT || '1080', 10),
         START_MAXIMIZED: process.env.START_MAXIMIZED === 'true',
         TEST_DATA_PATH: process.env.TEST_DATA_PATH || 'src/tests/test-data',
+        SUITE_WORKBOOK: process.env.SUITE_WORKBOOK || 'TestSuite.xlsx',
+        SUITE_SHEET: process.env.SUITE_SHEET || 'Regression',
+        SUITE_FEATURES_DIR: process.env.SUITE_FEATURES_DIR || 'src/tests/features',
+        SUITE_STOP_WORKFLOW_ON_FAILURE: parseBool(process.env.SUITE_STOP_WORKFLOW_ON_FAILURE, true),
         ALLURE_RESULTS_DIR: process.env.ALLURE_RESULTS_DIR || 'allure-results',
         SCREENSHOT_ON_FAIL: process.env.SCREENSHOT_ON_FAIL === 'true' ? true : false,
         POSTGRES_CONNECTION_STRING: process.env.POSTGRES_CONNECTION_STRING || '',

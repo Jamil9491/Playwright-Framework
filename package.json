@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ts-node src/Framework/scripts/runTests.ts",
+    "test:suite": "ts-node src/Framework/scripts/runSuite.ts",
     "test:sample": "ts-node src/Framework/scripts/runTests.ts --tags \"@sample\"",
     "test:smoke": "ts-node src/Framework/scripts/runTests.ts --tags \"@smoke\"",
     "test:regression": "ts-node src/Framework/scripts/runTests.ts --tags \"@regression\"",
@@ -70,6 +71,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "@cucumber/gherkin": "^34.0.0",
     "dotenv": "^17.2.3",
     "nodemailer": "^10.1.0",
     "pg": "^8.23.1",

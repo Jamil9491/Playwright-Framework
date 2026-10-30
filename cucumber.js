@@ -5,7 +5,9 @@
 
 const common = {
   // Specify the location of feature files
-  paths: ["src/tests/features/**/*.feature"],
+  // Excel suite runs (runSuite.ts) pass their generated feature files on the command line;
+  // Cucumber adds CLI paths to these instead of replacing them, so leave this empty then.
+  paths: process.env.SUITE_PLAN_FILE ? [] : ["src/tests/features/**/*.feature"],
 
   // Specify the location of step definitions and support files
   require: [
