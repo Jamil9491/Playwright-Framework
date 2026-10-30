@@ -452,6 +452,24 @@ export  class AppWrapper {
   }
 
   /**
+   * True if the page is already at the given URL (same origin and path).
+   * Query string, hash and a trailing slash are ignored, so "/auth/login?returnUrl=..."
+   * matches "/auth/login/".
+   */
+  public isAtUrl(url: string): boolean {
+    const fullUrl = url.startsWith("http") ? url : `${this.config.BASE_URL}${url}`;
+    const normalize = (value: string) => {
+      try {
+        const { origin, pathname } = new URL(value);
+        return `${origin}${pathname.replace(/\/+$/, "")}`.toLowerCase();
+      } catch {
+        return value; // e.g. "about:blank" on a new page
+      }
+    };
+    return normalize(this.page.url()) === normalize(fullUrl);
+  }
+
+  /**
    * Wait for the page to load completely.
    */
   public async waitForPageLoad(): Promise<void> {

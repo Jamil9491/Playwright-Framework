@@ -1,13 +1,10 @@
-@_192
+@ilcFeature
 Feature: Complete ilcSight
 
   @ilc-sight
   Scenario Outline: Complete ilcSight
-    Given I open the Login Page
-    When I enter "<username>" in username on Login Page
-    And I enter "<password>" in password on Login Page
-    And I click on sign in button on Login Page
-    And I click on letter of credit button on Ilc Sight Page
+    
+    When I click on letter of credit button on Ilc Sight Page
     And I click on create link on Ilc Sight Page
     And I select "<productType>" from product type on Ilc Sight Page
     And I enter "<applicantReference>" in applicant reference on Ilc Sight Page
@@ -47,6 +44,6 @@ Feature: Complete ilcSight
     And I click on submit button on Ilc Sight Page
 
     Examples:
-      | username | password | productType | applicantReference | applicationDate | transferMethod | expiryDate | confirmation | expiryPlace | beneficiaryBank | beneficiaryCountry | beneficiaryAccount | advisingBank | amount | currency | toleranceType | amount24 | amount25 | availableBy | presentationPeriodDays | presentationPeriodDescription | documentSendMode | goodsDescription | marginForm | marginPercent | marginCurrency | marginAccount | initiatingBranch | processingBranch | type | fileName | Iteration |
-      | log | log | ILC Sight | cif-0000-0000 | 10/15/2026 | Gateway | 10/30/2026 | May Add | expiry place | CIF000002 - XYZ Bank Limited | ALBANIA | 34523452345 | CIF000003 - National Bank Corporation | 1000 | Pakistani rupee | Amount | 166 | 166 | Deferred Payment | 8 | presentation description | Electronically | goods description | Percentage | 22 | Pakistani rupee | AC-00000-00002 (SAVING_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur | DT-000006 - G | image.png | DV_1      |
-      | log | log | ILC Sight | cif-0000-0000 | 10/15/2026 | Mail / Courier | 10/30/2026 | May Add | expiry place DV2 | CIF000003 - National Bank Corporation | AMERICAN SAMOA | 213423452345 | CIF000004 - Global International Bank | 2000 | Pakistani rupee | Amount | 150 | 150 | Deferred Payment | 6 | presentation description DV2 | First Class Mail | goods description DV2 | Percentage | 10 | Pakistani rupee | AC-00000-00001 (CURRENT_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur | DT-000006 - G | image.png | DV_2      |
+     | productType | applicantReference | applicationDate | transferMethod | expiryDate | confirmation | expiryPlace | beneficiaryBank | beneficiaryCountry | beneficiaryAccount | advisingBank | amount | currency | toleranceType | amount24 | amount25 | availableBy | presentationPeriodDays | presentationPeriodDescription | documentSendMode | goodsDescription | marginForm | marginPercent | marginCurrency | marginAccount | initiatingBranch | processingBranch | type | fileName | Iteration |
+      | ILC Sight | cif-0000-0000 | 10/15/2026 | Gateway | 10/30/2026 | May Add | expiry place | CIF000002 - XYZ Bank Limited | ALBANIA | 34523452345 | CIF000003 - National Bank Corporation | 1000 | Pakistani rupee | Amount | 166 | 166 | Deferred Payment | 8 | presentation description | Electronically | goods description | Percentage | 22 | Pakistani rupee | AC-00000-00002 (SAVING_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur | DT-000006 - G | image.png | DV_1      |
+     | ILC Sight | cif-0000-0000 | 10/15/2026 | Mail / Courier | 10/30/2026 | May Add | expiry place DV2 | CIF000003 - National Bank Corporation | AMERICAN SAMOA | 213423452345 | CIF000004 - Global International Bank | 2000 | Pakistani rupee | Amount | 150 | 150 | Deferred Payment | 6 | presentation description DV2 | First Class Mail | goods description DV2 | Percentage | 10 | Pakistani rupee | AC-00000-00001 (CURRENT_ACC) | 787 - HBL PLAZA BR, Bahawalpur | 787 - HBL PLAZA BR, Bahawalpur | DT-000006 - G | image.png | DV_2      |

@@ -1,21 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { ICustomWorld } from "../../Framework/support/world";
 
-Given("I open the Login Page", async function (this: ICustomWorld) {
-  await this.POManager.LoginPage.open();
-});
-
-When("I enter {string} in username on Login Page", async function (this: ICustomWorld, username: string) {
-  await this.POManager.LoginPage.enterUsername(username);
-});
-
-When("I enter {string} in password on Login Page", async function (this: ICustomWorld, password: string) {
-  await this.POManager.LoginPage.enterPassword(password);
-});
-
-When("I click on sign in button on Login Page", async function (this: ICustomWorld) {
-  await this.POManager.LoginPage.submit();
-});
 
 When("I click on letter of credit button on Ilc Sight Page", async function (this: ICustomWorld) {
   await this.POManager.ilcSightPage.clickLetterOfCredit();

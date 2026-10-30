@@ -1,20 +1,26 @@
 import { Page } from "@playwright/test";
-import { LoginPage } from "./loginPage";
+import { LoginTFSPage } from "./loginTFSPage";
 import { IlcSightPage } from "./ilcSightPage";
+import { LogutTFSPage } from "./logutTFSPage";
+
 export class POManager {
   page: Page;
-  private _loginPage?: LoginPage;
+  private _loginTFSPage?: LoginTFSPage;
   private _ilcSightPage?: IlcSightPage;
+  private _logutTFSPage?: LogutTFSPage;
 
   constructor(page: Page) {
     this.page = page;
   }
-  get LoginPage(): LoginPage {
-    return (this._loginPage ??= new LoginPage(this.page));
+  get LoginTFSPage(): LoginTFSPage {
+    return (this._loginTFSPage ??= new LoginTFSPage(this.page));
   }
 
   get ilcSightPage(): IlcSightPage {
     return (this._ilcSightPage ??= new IlcSightPage(this.page));
+  }
+  get logutTFSPage(): LogutTFSPage {
+    return (this._logutTFSPage ??= new LogutTFSPage(this.page));
   }
 }
 
