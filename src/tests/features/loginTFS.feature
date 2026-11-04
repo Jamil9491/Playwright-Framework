@@ -1,4 +1,4 @@
-@_192
+@loginTfs-Feature
 Feature: Login TFS Application
 
   @login-tfs

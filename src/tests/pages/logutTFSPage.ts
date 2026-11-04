@@ -7,10 +7,7 @@ export class LogutTFSPage extends BasePage {
   private readonly signOutButton: Locator;
   private readonly usernameInput: Locator;
 
-  // public async isPageLoaded(): Promise<boolean> {
-  //   await expect(this.profileButton).toBeVisible({ timeout: 15000 });
-  //   return true;
-  // }
+
 
   constructor(page: Page) {
     super(page);
@@ -19,9 +16,7 @@ export class LogutTFSPage extends BasePage {
     this.usernameInput = page.getByTestId("login-username");
   }
 
-  // public async assertLoLogLogVisible(): Promise<void> {
-  //   await expect(this.loLogLogButton).toBeVisible();
-  // }
+
 
   public async clickProfileButton(): Promise<void> {
     await this.appWrapper.executeStep(this.profileButton, UIOps.Set);
