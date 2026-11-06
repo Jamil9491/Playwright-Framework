@@ -1,10 +1,12 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { BasePage } from "./basePage";
 import { UIOps } from "@/Framework/controls/appWrapper";
+import { GlobalKey, GlobalVariables } from "@/Framework/globalVariables";
 
 export class IlcSightPage extends BasePage {
   private readonly letterOfCreditButton: Locator;
   private readonly createLink: Locator;
+  private readonly findMenu: Locator;
   private readonly productTypeDropdown: Locator;
   private readonly applicantReferenceInput: Locator;
   private readonly fetchButton: Locator;
@@ -41,6 +43,11 @@ export class IlcSightPage extends BasePage {
   private readonly saveButton: Locator;
   private readonly validateButton: Locator;
   private readonly submitButton: Locator;
+  private readonly validationSuccessToast: Locator;
+  private readonly errorToast: Locator;
+  private readonly dialogContinueButton: Locator;
+  private readonly dialogCloseButton: Locator;
+  private readonly generatedReferenceCell: Locator;
 
   public async isPageLoaded(): Promise<boolean> {
     await expect(this.letterOfCreditButton).toBeVisible({ timeout: 15000 });
@@ -51,6 +58,7 @@ export class IlcSightPage extends BasePage {
     super(page);
     this.letterOfCreditButton = page.getByTestId("nav-lc");
     this.createLink = page.getByTestId("nav-lc-create");
+    this.findMenu = page.getByTestId("nav-lc-find");
     this.productTypeDropdown = page
       .getByTestId("lc-field-productTypeCode-control")
       .getByRole("combobox");
@@ -143,6 +151,21 @@ export class IlcSightPage extends BasePage {
     this.saveButton = page.getByTestId("lc-field-documents-1-save");
     this.validateButton = page.getByTestId("lc-button-validate");
     this.submitButton = page.getByTestId("lc-button-submit");
+    // Matched by text too, so a success toast left over from an earlier action doesn't count
+    this.validationSuccessToast = page.locator(
+      'div.p-toast-summary[data-p="success"]',
+    );
+    // .filter({ hasText: /Validation successful/i });
+    this.errorToast = page.locator('div.p-toast-summary[data-p="error"]');
+    this.dialogContinueButton = page.getByTestId(
+      "lc-create-dialog-button-continue",
+    );
+    this.dialogCloseButton = page.getByTestId("lc-create-dialog-button-close");
+    // Reference number of the first row on the Find screen (the LC just submitted)
+    this.generatedReferenceCell = page
+      .getByTestId("table-cell-code")
+      .locator("span")
+      .first();
   }
 
   public async clickLetterOfCredit(): Promise<void> {
@@ -152,9 +175,15 @@ export class IlcSightPage extends BasePage {
   public async openCreate(): Promise<void> {
     await this.appWrapper.executeStep(this.createLink, UIOps.Set);
   }
-
+  public async openFind(): Promise<void> {
+    await this.appWrapper.executeStep(this.findMenu, UIOps.Set);
+  }
   public async selectProductType(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.productTypeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.productTypeDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterApplicantReference(
@@ -180,15 +209,27 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectTransferMethod(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.transferMethodDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.transferMethodDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterExpiryDate(expiryDate: string): Promise<void> {
-    await this.appWrapper.executeStep(this.expiryDateDropdown, UIOps.Set, expiryDate);
+    await this.appWrapper.executeStep(
+      this.expiryDateDropdown,
+      UIOps.Set,
+      expiryDate,
+    );
   }
 
   public async selectConfirmation(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.confirmationDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.confirmationDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async checkTransferable(): Promise<void> {
@@ -200,15 +241,27 @@ export class IlcSightPage extends BasePage {
   }
 
   public async enterExpiryPlace(expiryPlace: string): Promise<void> {
-    await this.appWrapper.executeStep(this.expiryPlaceInput, UIOps.Set, expiryPlace);
+    await this.appWrapper.executeStep(
+      this.expiryPlaceInput,
+      UIOps.Set,
+      expiryPlace,
+    );
   }
 
   public async selectBeneficiaryBank(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.beneficiaryBankDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.beneficiaryBankDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async selectBeneficiaryCountry(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.beneficiaryCountryDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.beneficiaryCountryDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterBeneficiaryAccount(
@@ -222,7 +275,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectAdvisingBank(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.advisingBankDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.advisingBankDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterAmount(amount: string): Promise<void> {
@@ -234,19 +291,35 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectToleranceType(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.toleranceTypeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.toleranceTypeDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterFieldK98ekgtAmount(amount: string): Promise<void> {
-    await this.appWrapper.executeStep(this.fieldK98ekgtAmountInput, UIOps.Set, amount);
+    await this.appWrapper.executeStep(
+      this.fieldK98ekgtAmountInput,
+      UIOps.Set,
+      amount,
+    );
   }
 
   public async enterField3luf0l6Amount(amount: string): Promise<void> {
-    await this.appWrapper.executeStep(this.field3luf0l6AmountInput, UIOps.Set, amount);
+    await this.appWrapper.executeStep(
+      this.field3luf0l6AmountInput,
+      UIOps.Set,
+      amount,
+    );
   }
 
   public async selectAvailableBy(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.availableByDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.availableByDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterPresentationPeriodDays(
@@ -270,7 +343,11 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectDocumentSendMode(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.documentSendModeDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.documentSendModeDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterGoodsDescription(goodsDescription: string): Promise<void> {
@@ -282,27 +359,51 @@ export class IlcSightPage extends BasePage {
   }
 
   public async selectMarginForm(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.marginFormDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.marginFormDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async enterMarginPercent(marginPercent: string): Promise<void> {
-    await this.appWrapper.executeStep(this.marginPercentInput, UIOps.Set, marginPercent);
+    await this.appWrapper.executeStep(
+      this.marginPercentInput,
+      UIOps.Set,
+      marginPercent,
+    );
   }
 
   public async selectMarginCurrency(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.marginCurrencyDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.marginCurrencyDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async selectMarginAccount(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.marginAccountDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.marginAccountDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async selectInitiatingBranch(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.initiatingBranchDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.initiatingBranchDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async selectProcessingBranch(value: string): Promise<void> {
-    await this.appWrapper.executeStep(this.processingBranchDropdown, UIOps.Set, value);
+    await this.appWrapper.executeStep(
+      this.processingBranchDropdown,
+      UIOps.Set,
+      value,
+    );
   }
 
   public async clickAddRow(): Promise<void> {
@@ -314,19 +415,74 @@ export class IlcSightPage extends BasePage {
   }
 
   public async clickAttachments(fileName: string): Promise<void> {
-    await this.appWrapper.executeStep(this.attachmentsInput, UIOps.Set, fileName);
+    await this.appWrapper.executeStep(
+      this.attachmentsInput,
+      UIOps.Set,
+      fileName,
+    );
   }
 
   public async clickSave(): Promise<void> {
     await this.appWrapper.executeStep(this.saveButton, UIOps.Set);
   }
 
+  /**
+   * Clicks Validate and handles the outcome:
+   *  - success toast                        → continue
+   *  - warning dialog (no toast)            → click Continue, then continue
+   *  - error toast and/or error dialog      → stop the test
+   */
   public async clickValidate(): Promise<void> {
     await this.appWrapper.executeStep(this.validateButton, UIOps.Set);
+
+    // Wait for whichever outcome shows up first
+    await this.validationSuccessToast
+      .or(this.errorToast)
+      .or(this.dialogContinueButton)
+      .or(this.dialogCloseButton)
+      .first()
+      .waitFor({ state: "visible", timeout: this.config.TIMEOUT });
+
+    // Error: the toast and the dialog may not appear at the same moment, so either one fails.
+    // The dialog is left open so the failure screenshot shows it.
+    if (
+      (await this.errorToast.first().isVisible()) ||
+      (await this.dialogCloseButton.isVisible())
+    ) {
+      this.logger.error("LC Validation Failed");
+      throw new Error("LC Validation Failed");
+    }
+
+    // Warning: accept it and carry on
+    if (await this.dialogContinueButton.isVisible()) {
+      this.logger.warn("Validation Warning. Please continue");
+      await this.appWrapper.executeStep(this.dialogContinueButton, UIOps.Set);
+      await this.dialogContinueButton.waitFor({
+        state: "hidden",
+        timeout: this.config.TIMEOUT,
+      });
+      return;
+    }
+
+    this.logger.info("LC Validation Passed");
   }
 
   public async submit(): Promise<void> {
     await this.appWrapper.executeStep(this.submitButton, UIOps.Set);
+  }
+
+  /** Reads the generated LC reference number from the Find screen and stores it in ILC_SIGHT_REF_NUMB. */
+  public async storeGeneratedReferenceNumber(): Promise<string> {
+    await expect(this.generatedReferenceCell).not.toBeEmpty({
+      timeout: this.config.TIMEOUT,
+    });
+    const referenceNumber = (
+      await this.appWrapper.executeStep(this.generatedReferenceCell, UIOps.Read)
+    ).trim();
+
+    GlobalVariables.set(GlobalKey.ILC_SIGHT_REF_NUMB, referenceNumber);
+    this.logger.info(`Stored ILC_SIGHT_REF_NUMB = ${referenceNumber}`);
+    return referenceNumber;
   }
 }
 

@@ -36,7 +36,7 @@ interface ElementMetadata {
  * Abstract base class for all page objects.
  * Contains common methods and properties that all pages should have.
  */
-export  class AppWrapper {
+export class AppWrapper {
   protected page: Page;
   protected logger: typeof Logger;
   protected config: typeof config;
@@ -278,6 +278,10 @@ export  class AppWrapper {
     value: string,
     timeout: number,
   ): Promise<void> {
+    if (value === "") {
+      await locator.click({ timeout });
+      return;
+    }
     const option = this.page
       .getByRole("option", {
         name: value,
@@ -289,9 +293,9 @@ export  class AppWrapper {
     // and the list never opens. Re-open it until the option shows up or the timeout runs out.
     await expect(async () => {
       if ((await locator.getAttribute("aria-expanded")) !== "true") {
-        await locator.click({ timeout: 5000 });
+        await locator.click({ timeout: 30000 });
       }
-      await option.waitFor({ state: "visible", timeout: 3000 });
+      await option.waitFor({ state: "visible", timeout: 30000 });
     }).toPass({ timeout, intervals: [250, 500, 1000] });
 
     await option.click({
@@ -457,7 +461,9 @@ export  class AppWrapper {
    * matches "/auth/login/".
    */
   public isAtUrl(url: string): boolean {
-    const fullUrl = url.startsWith("http") ? url : `${this.config.BASE_URL}${url}`;
+    const fullUrl = url.startsWith("http")
+      ? url
+      : `${this.config.BASE_URL}${url}`;
     const normalize = (value: string) => {
       try {
         const { origin, pathname } = new URL(value);
@@ -896,5 +902,3 @@ export  class AppWrapper {
 
   //FUNCTION:HANDLING THE EXECUTE STEP FUNCTIONALIT
 }
-
-

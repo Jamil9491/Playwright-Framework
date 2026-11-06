@@ -11,6 +11,10 @@ Feature: Login TFS Application
     Then user profile menu is visible on page
 
     Examples:
-      | Username    | Password  | Iteration |
-      | log         | log       | DV_1      |
-      | input       | input     | DV_2      |
+      | Username        | Password      | Iteration |
+      | log             | log           | DV_1      |
+      | input           | input         | DV_2      |
+      | review          | review        | DV_3      |
+      | compliance      | compliance    | DV_4      |
+      | limit           | limit         | DV_5      |
+      | authorize       | authorize     | DV_6      |

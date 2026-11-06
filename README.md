@@ -1,6 +1,6 @@
 # Playwright + Cucumber Test Automation Framework
 
-A TypeScript test automation framework for the TFS web application, built on **Playwright**, **Cucumber.js** (BDD) and **Allure 3** reporting. Tests are written as Gherkin feature files. Pages are modelled as page objects that drive the UI through one shared control layer (`AppWrapper`). What runs, and with which data variation, is controlled from an Excel test suite.
+A TypeScript test automation framework for Web Application, built on **Playwright**, **Cucumber.js** (BDD) and **Allure 3** reporting. Tests are written as Gherkin feature files. Pages are modelled as page objects that drive the UI through one shared control layer (`AppWrapper`). What runs, and with which data variation, is controlled from an Excel test suite.
 
 ## 🚀 Features
 
@@ -74,17 +74,17 @@ cp .env-example .env            # then edit .env
 
 All settings come from `.env`. `.env-example` documents every option. `.env` holds credentials, so it is git-ignored and must never be committed.
 
-| Group | Variables |
-|---|---|
-| Environment | `NODE_ENV` (`local` / `development` / `staging` / `production`) selects `LOCAL_BASE_URL`, `DEV_BASE_URL`, `STAGING_BASE_URL` or `PROD_BASE_URL` |
-| Browser | `BROWSER` (`chromium` / `firefox` / `webkit`), `HEADLESS`, `START_MAXIMIZED`, `VIEWPORT_WIDTH` / `VIEWPORT_HEIGHT`, `SLOW_MO` |
-| Timeouts | `TIMEOUT` (Playwright actions, ms), `STEP_TIMEOUT` (one Cucumber step, keep it above `TIMEOUT`) |
-| Test data | `TEST_DATA_PATH`: folder for `TestSuite.xlsx` and files to upload |
-| Excel suite | `SUITE_WORKBOOK`, `SUITE_SHEET`, `SUITE_FEATURES_DIR`, `SUITE_STOP_WORKFLOW_ON_FAILURE` |
-| Database | `POSTGRES_CONNECTION_STRING`, or `POSTGRES_HOST` / `PORT` / `NAME` / `USER` / `PASSWORD` / `SSL`, plus `POSTGRES_POOL_MAX`, `POSTGRES_QUERY_TIMEOUT` |
-| Reporting | `ALLURE_RESULTS_DIR`, `SCREENSHOT_ON_FAIL` |
-| Email | `EMAIL_NOTIFICATION`, `EMAIL_SEND_ON`, `SMTP_*`, `EMAIL_FROM` / `TO` / `CC` / `BCC`, and more (see [Email Notifications](#-email-notifications)) |
-| Tags | `CUCUMBER_TAGS`: default tag expression for `npm test` |
+| Group       | Variables                                                                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Environment | `NODE_ENV` (`local` / `development` / `staging` / `production`) selects `LOCAL_BASE_URL`, `DEV_BASE_URL`, `STAGING_BASE_URL` or `PROD_BASE_URL`      |
+| Browser     | `BROWSER` (`chromium` / `firefox` / `webkit`), `HEADLESS`, `START_MAXIMIZED`, `VIEWPORT_WIDTH` / `VIEWPORT_HEIGHT`, `SLOW_MO`                        |
+| Timeouts    | `TIMEOUT` (Playwright actions, ms), `STEP_TIMEOUT` (one Cucumber step, keep it above `TIMEOUT`)                                                      |
+| Test data   | `TEST_DATA_PATH`: folder for `TestSuite.xlsx` and files to upload                                                                                    |
+| Excel suite | `SUITE_WORKBOOK`, `SUITE_SHEET`, `SUITE_FEATURES_DIR`, `SUITE_STOP_WORKFLOW_ON_FAILURE`                                                              |
+| Database    | `POSTGRES_CONNECTION_STRING`, or `POSTGRES_HOST` / `PORT` / `NAME` / `USER` / `PASSWORD` / `SSL`, plus `POSTGRES_POOL_MAX`, `POSTGRES_QUERY_TIMEOUT` |
+| Reporting   | `ALLURE_RESULTS_DIR`, `SCREENSHOT_ON_FAIL`                                                                                                           |
+| Email       | `EMAIL_NOTIFICATION`, `EMAIL_SEND_ON`, `SMTP_*`, `EMAIL_FROM` / `TO` / `CC` / `BCC`, and more (see [Email Notifications](#-email-notifications))     |
+| Tags        | `CUCUMBER_TAGS`: default tag expression for `npm test`                                                                                               |
 
 The active configuration is printed once at the start of every run.
 
@@ -93,6 +93,7 @@ The active configuration is printed once at the start of every run.
 There are two ways to run tests:
 
 **1. Excel test suite (recommended for regression):** `TestSuite.xlsx` decides what runs.
+
 ```bash
 npm run test:suite                                        # SUITE_WORKBOOK / SUITE_SHEET from .env
 npm run test:suite -- --sheet Smoke                       # another sheet
@@ -101,6 +102,7 @@ npm run test:suite -- --dry-run                           # check the sheet and 
 ```
 
 **2. Tags:** run features directly with a Cucumber tag expression.
+
 ```bash
 npm test                                      # all features (or CUCUMBER_TAGS from .env)
 npm test -- --tags "@login-tfs"               # one tag
@@ -114,28 +116,29 @@ Both commands generate the Allure report and send the email (when enabled) after
 
 Sheet `Regression` in `src/tests/test-data/TestSuite.xlsx`:
 
-| Seq_id | Execute | WorkFlow_Des | Feature | Scenario | Scenario_Execute | Description | Iteration |
-|---|---|---|---|---|---|---|---|
-| 3 | Y | Login, create an ILC, switch user | | | | | |
-| 3 | | | Login TFS Application | User Should be Login TFS Application | Y | Login as maker | DV_1 |
-| 3 | | | Complete ilcSight | Complete ilcSight | Y | Create ILC | DV_2 |
-| 3 | | | logout TFS Application | User should be logout TFS Application | Y | Logout | |
-| 3 | | | Login TFS Application | User Should be Login TFS Application | Y | Login as checker | DV_2 |
+| Seq_id | Execute | WorkFlow_Des                      | Feature                | Scenario                              | Scenario_Execute | Description      | Iteration |
+| ------ | ------- | --------------------------------- | ---------------------- | ------------------------------------- | ---------------- | ---------------- | --------- |
+| 3      | Y       | Login, create an ILC, switch user |                        |                                       |                  |                  |           |
+| 3      |         |                                   | Login TFS Application  | User Should be Login TFS Application  | Y                | Login as maker   | DV_1      |
+| 3      |         |                                   | Complete ilcSight      | Complete ilcSight                     | Y                | Create ILC       | DV_2      |
+| 3      |         |                                   | logout TFS Application | User should be logout TFS Application | Y                | Logout           |           |
+| 3      |         |                                   | Login TFS Application  | User Should be Login TFS Application  | Y                | Login as checker | DV_2      |
 
-| Column | Meaning |
-|---|---|
-| `Seq_id` | Workflow number |
-| `Execute` | `Y`/`N` on a **workflow row**: the row that starts a workflow |
-| `WorkFlow_Des` | Workflow description, used as the group name in the report |
-| `Feature` | Feature title (`Feature: Login TFS Application`) or feature file name |
-| `Scenario` | Scenario name, as written in the feature file |
-| `Scenario_Execute` | `Y` runs the scenario, `N` skips it |
-| `Description` | Free text |
-| `Iteration` | Data variation, such as `DV_2`. `DV_1, DV_2` runs the scenario twice. Leave it empty to use all rows |
+| Column             | Meaning                                                                                              |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| `Seq_id`           | Workflow number                                                                                      |
+| `Execute`          | `Y`/`N` on a **workflow row**: the row that starts a workflow                                        |
+| `WorkFlow_Des`     | Workflow description, used as the group name in the report                                           |
+| `Feature`          | Feature title (`Feature: Login TFS Application`) or feature file name                                |
+| `Scenario`         | Scenario name, as written in the feature file                                                        |
+| `Scenario_Execute` | `Y` runs the scenario, `N` skips it                                                                  |
+| `Description`      | Free text                                                                                            |
+| `Iteration`        | Data variation, such as `DV_2`. `DV_1, DV_2` runs the scenario twice. Leave it empty to use all rows |
 
 The column order doesn't matter. Names are matched case-insensitively.
 
 **How it works:**
+
 - **Selection:** the rows under a workflow row, up to the next workflow row, are that workflow's scenarios. Only workflows with `Execute=Y` run, and inside them only rows with `Scenario_Execute=Y`, in sheet order. The same scenario can appear more than once.
 - **Iterations:** every table with an `Iteration` column (Examples tables and step data tables, including the Background) is trimmed to the requested iteration, so steps receive only that row and need no iteration logic. `GlobalVariables.Iteration`, `Seq_Id` and `WorkFlow_Desc` hold the current values.
 - **Shared session:** scenarios in the same workflow continue in the **same browser** and keep `GlobalVariables`, like one long test. Each new workflow starts with a fresh browser and cleared globals.
@@ -217,16 +220,17 @@ export class LoginTFSPage extends BasePage {
 
 **`executeStep(locator, operation, data?, options?)`** looks at the element and performs the right action:
 
-| `UIOps` | Behaviour |
-|---|---|
-| `Set` | **Text input / textarea:** fills `data`. **Button or link:** clicks. **Checkbox / radio:** checks. **Native `<select>`:** selects. **PrimeNG dropdown** (`getByRole("combobox")`): opens it and picks the option `data`, retrying if the panel didn't open. **PrimeNG date picker:** types the date (e.g. `10/15/2026`) and confirms that it stuck. **File input or upload zone:** uploads the file named `data` from `TEST_DATA_PATH`. |
-| `Read` | Returns the value or text |
-| `Verify` | Asserts the value or text equals `data` |
-| `Uncheck` / `Clear` / `Hover` | As named |
+| `UIOps`                       | Behaviour                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Set`                         | **Text input / textarea:** fills `data`. **Button or link:** clicks. **Checkbox / radio:** checks. **Native `<select>`:** selects. **PrimeNG dropdown** (`getByRole("combobox")`): opens it and picks the option `data`, retrying if the panel didn't open. **PrimeNG date picker:** types the date (e.g. `10/15/2026`) and confirms that it stuck. **File input or upload zone:** uploads the file named `data` from `TEST_DATA_PATH`. |
+| `Read`                        | Returns the value or text                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `Verify`                      | Asserts the value or text equals `data`                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `Uncheck` / `Clear` / `Hover` | As named                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 It highlights the element, waits for it, and saves a screenshot and a clear log line when an action fails. `options` accepts `{ timeout, highlight, screenshotOnFailure }`. `AppWrapper` also has navigation and assertion helpers: `navigateTo`, `isAtUrl`, `waitForPageLoad`, `assertElementVisible`, `reloadPage`, and others.
 
 **Locator rules:**
+
 - Prefer `getByTestId(...)`, which matches `data-testid`. For PrimeNG `p-select`, target the combobox: `page.getByTestId("...-control").getByRole("combobox")`. A bare `.locator("span")` matches several elements and fails Playwright's strict mode.
 - Keep assertions (`expect(...)`) in page methods named `verify…` or `assert…`.
 
@@ -248,9 +252,12 @@ Use pages only through `this.POManager`, and keep steps thin:
 import { Given, When, Then, DataTable } from "@cucumber/cucumber";
 import { ICustomWorld } from "../../Framework/support/world";
 
-Given("Application Login Screen is Opened", async function (this: ICustomWorld) {
-  await this.POManager.LoginTFSPage.open();
-});
+Given(
+  "Application Login Screen is Opened",
+  async function (this: ICustomWorld) {
+    await this.POManager.LoginTFSPage.open();
+  },
+);
 
 When(
   "User Enter Values in respective fields as",
@@ -265,10 +272,10 @@ When(
 
 **Reading data tables:**
 
-| Table layout | Method | Result |
-|---|---|---|
-| Header row, then value rows | `dataTable.hashes()` | `[{ UserName: "log", Password: "log", Iteration: "DV_1" }]` |
-| Vertical `\| key \| value \|`, exactly 2 columns | `dataTable.rowsHash()` | `{ UserName: "log", Password: "log" }` |
+| Table layout                                     | Method                 | Result                                                      |
+| ------------------------------------------------ | ---------------------- | ----------------------------------------------------------- |
+| Header row, then value rows                      | `dataTable.hashes()`   | `[{ UserName: "log", Password: "log", Iteration: "DV_1" }]` |
+| Vertical `\| key \| value \|`, exactly 2 columns | `dataTable.rowsHash()` | `{ UserName: "log", Password: "log" }`                      |
 
 Keys must match the header text exactly, including case.
 
@@ -279,9 +286,9 @@ To pass a value between steps, or between scenarios in the same workflow, use `G
 ```typescript
 import { GlobalKey, GlobalVariables } from "@/Framework/globalVariables";
 
-GlobalVariables.set(GlobalKey.ILC_SIGHT_REF_NUMB, refNumber);   // typed keys (add new ones to GlobalKey)
-GlobalVariables.ILC_SIGHT_REF_NUMB;                             // shorthand getter
-GlobalVariables.setDynamic("approvalId", id);                   // free-form keys
+GlobalVariables.set(GlobalKey.ILC_SIGHT_REF_NUMB, refNumber); // typed keys (add new ones to GlobalKey)
+GlobalVariables.ILC_SIGHT_REF_NUMB; // shorthand getter
+GlobalVariables.setDynamic("approvalId", id); // free-form keys
 GlobalVariables.getDynamic<string>("approvalId");
 ```
 
@@ -292,13 +299,19 @@ Values are cleared before each scenario in a tag run, and before each workflow i
 ```typescript
 import { posgreSQLService } from "@/Framework/dataSourceAction/posgreSQLService";
 
-const rows   = await posgreSQLService.getRows<Row>("SELECT ... WHERE id = $1", [id]);
-const first  = await posgreSQLService.getFirstRow<Row>(sql, params);
-const value  = await posgreSQLService.getSingleValue<string>(sql, params);
+const rows = await posgreSQLService.getRows<Row>("SELECT ... WHERE id = $1", [
+  id,
+]);
+const first = await posgreSQLService.getFirstRow<Row>(sql, params);
+const value = await posgreSQLService.getSingleValue<string>(sql, params);
 const exists = await posgreSQLService.exists(sql, params);
-await posgreSQLService.fetchAndStore(GlobalKey.ILC_SIGHT_REF_NUMB, sql);   // first column → GlobalVariables
-await posgreSQLService.pollUntil(sql, params,                            // wait for a record to appear
-  (rows) => rows.some((r) => r.status === "COMPLETED"), { timeoutMs: 90000 });
+await posgreSQLService.fetchAndStore(GlobalKey.ILC_SIGHT_REF_NUMB, sql); // first column → GlobalVariables
+await posgreSQLService.pollUntil(
+  sql,
+  params, // wait for a record to appear
+  (rows) => rows.some((r) => r.status === "COMPLETED"),
+  { timeoutMs: 90000 },
+);
 ```
 
 Always pass parameters as `$1, $2, …` and never build SQL by string concatenation. The connection pool opens on first use and closes after the run. See `employeeSkills.feature` for a complete example.
@@ -331,18 +344,18 @@ Feature: Complete ilcSight
 
 When `EMAIL_NOTIFICATION=true`, every run generates the Allure report as one HTML file (`allure-report/index.html`) and emails it with a summary.
 
-| Variable | Description |
-|---|---|
-| `EMAIL_NOTIFICATION` | `true` to send the report after every run |
-| `EMAIL_SEND_ON` | `always`, `failure` or `success` |
-| `EMAIL_DRY_RUN` | `true` saves the email to `email-output/*.eml` instead of sending it |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | SMTP server (Office 365: `smtp.office365.com` / `587` / `false`) |
-| `SMTP_USER` / `SMTP_PASSWORD` | SMTP login |
-| `EMAIL_FROM` / `EMAIL_TO` / `EMAIL_CC` / `EMAIL_BCC` | Sender and comma-separated recipients |
-| `EMAIL_SUBJECT` | Subject template, e.g. `[{{status}}] {{projectName}} - {{passed}}/{{total}} passed` |
-| `EMAIL_PROJECT_NAME` | Project name in the subject and body |
-| `EMAIL_TEMPLATE_PATH` | HTML body template (default `src/Framework/Report/email-templates/report-email.html`) |
-| `EMAIL_ATTACH_REPORT` / `EMAIL_MAX_ATTACHMENT_MB` | Attach the report, and skip the attachment above this size (default 20 MB) |
+| Variable                                             | Description                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `EMAIL_NOTIFICATION`                                 | `true` to send the report after every run                                             |
+| `EMAIL_SEND_ON`                                      | `always`, `failure` or `success`                                                      |
+| `EMAIL_DRY_RUN`                                      | `true` saves the email to `email-output/*.eml` instead of sending it                  |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE`            | SMTP server (Office 365: `smtp.office365.com` / `587` / `false`)                      |
+| `SMTP_USER` / `SMTP_PASSWORD`                        | SMTP login                                                                            |
+| `EMAIL_FROM` / `EMAIL_TO` / `EMAIL_CC` / `EMAIL_BCC` | Sender and comma-separated recipients                                                 |
+| `EMAIL_SUBJECT`                                      | Subject template, e.g. `[{{status}}] {{projectName}} - {{passed}}/{{total}} passed`   |
+| `EMAIL_PROJECT_NAME`                                 | Project name in the subject and body                                                  |
+| `EMAIL_TEMPLATE_PATH`                                | HTML body template (default `src/Framework/Report/email-templates/report-email.html`) |
+| `EMAIL_ATTACH_REPORT` / `EMAIL_MAX_ATTACHMENT_MB`    | Attach the report, and skip the attachment above this size (default 20 MB)            |
 
 Placeholders for the subject and template: `{{projectName}}` `{{status}}` `{{total}}` `{{passed}}` `{{failed}}` `{{broken}}` `{{skipped}}` `{{passRate}}` `{{duration}}` `{{env}}` `{{baseUrl}}` `{{browser}}` `{{tags}}` `{{suite}}` `{{date}}` `{{host}}`, plus `{{statusColor}}`, `{{failedTestsTable}}` and `{{reportNote}}` in the template.
 
@@ -381,18 +394,18 @@ A `--dry-run` also sends an email when notifications are enabled. Set `EMAIL_NOT
 
 ## 🐛 Troubleshooting
 
-| Problem | Fix |
-|---|---|
-| `Undefined step` | The step text in the feature doesn't match any step definition. Check spelling and parameters, or run `npm run test:suite -- --dry-run` |
-| `strict mode violation: locator resolved to N elements` | Make the locator unique, e.g. `getByRole("combobox")` inside the PrimeNG control |
-| `rowsHash can only be called on a data table where all rows have exactly two columns` | The table is horizontal. Use `dataTable.hashes()` |
-| Date field empties after the next step | Use `executeStep(dateInput, UIOps.Set, "MM/DD/YYYY")`, which types into the PrimeNG date picker instead of filling it |
-| `Upload failed: file not found` | Put the file in `TEST_DATA_PATH` and pass only its name |
-| Suite: `feature '…' not found` / `scenario '…' not found` | `Feature` must be the feature title or file name, and `Scenario` the exact scenario name |
-| Suite: a scenario can't find the login form | It runs after a scenario that already logged in, in the same workflow. Add a logout step, or move it to its own workflow |
-| `Allure results directory not found` | No scenario ran (e.g. a tag filter matched nothing) |
-| `ECONNREFUSED` on database steps | Check `POSTGRES_*` in `.env` and that the server is reachable |
-| Browser not found | `npx playwright install` |
+| Problem                                                                               | Fix                                                                                                                                     |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `Undefined step`                                                                      | The step text in the feature doesn't match any step definition. Check spelling and parameters, or run `npm run test:suite -- --dry-run` |
+| `strict mode violation: locator resolved to N elements`                               | Make the locator unique, e.g. `getByRole("combobox")` inside the PrimeNG control                                                        |
+| `rowsHash can only be called on a data table where all rows have exactly two columns` | The table is horizontal. Use `dataTable.hashes()`                                                                                       |
+| Date field empties after the next step                                                | Use `executeStep(dateInput, UIOps.Set, "MM/DD/YYYY")`, which types into the PrimeNG date picker instead of filling it                   |
+| `Upload failed: file not found`                                                       | Put the file in `TEST_DATA_PATH` and pass only its name                                                                                 |
+| Suite: `feature '…' not found` / `scenario '…' not found`                             | `Feature` must be the feature title or file name, and `Scenario` the exact scenario name                                                |
+| Suite: a scenario can't find the login form                                           | It runs after a scenario that already logged in, in the same workflow. Add a logout step, or move it to its own workflow                |
+| `Allure results directory not found`                                                  | No scenario ran (e.g. a tag filter matched nothing)                                                                                     |
+| `ECONNREFUSED` on database steps                                                      | Check `POSTGRES_*` in `.env` and that the server is reachable                                                                           |
+| Browser not found                                                                     | `npx playwright install`                                                                                                                |
 
 Debug Playwright calls with `DEBUG=pw:api npm test`, or slow the run down with `SLOW_MO=500`.
 

@@ -8,6 +8,7 @@
 import {
   Before,
   After,
+  AfterStep,
   BeforeAll,
   AfterAll,
   Status,
@@ -102,13 +103,15 @@ Before({ timeout: 60000 }, async function (this: ICustomWorld, scenario) {
 });
 
 // Cleanup after each scenario
-After(async function (this: ICustomWorld, scenario) {
-  if (scenario.result?.status === Status.FAILED && this.page) {
-    await ScreenshotManager.capture(
-      this,
-      `FAILED-${scenario.pickle.name.replace(/s+/g, "_")}`,
-    );
+// Screenshot of the failed step. Taken in AfterStep (not After) so Allure shows it on the test,
+// right below the failed step; After-hook attachments end up hidden under "Tear down".
+AfterStep(async function (this: ICustomWorld, { result }) {
+  if (result.status === Status.FAILED && this.page && config.SCREENSHOT_ON_FAIL) {
+    await ScreenshotManager.capture(this, "Failure screenshot");
   }
+});
+
+After(async function (this: ICustomWorld, scenario) {
   const scenarioName = scenario.pickle.name;
   const scenarioStatus = scenario.result?.status;
 
